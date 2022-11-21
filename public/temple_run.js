@@ -112,7 +112,7 @@ function sauter(){
     console.log("Saut");
     if (posSkin.saut<-1){
         posSkin.glisse=-1;
-        posSkin.saut=3;
+        posSkin.saut=2;
         WORLD[posSkin.y][posSkin.x]=SKINUP
     }
 
@@ -122,7 +122,7 @@ function glisser(){
     console.log("Glisse");
     if (posSkin.glisse<-1){
         posSkin.saut=-1;
-        posSkin.glisse=3;
+        posSkin.glisse=2;
         WORLD[posSkin.y][posSkin.x]=SKINDOWN
     }
 }
@@ -227,12 +227,13 @@ function AjoutLigne(){
     function Jeu(){
         if (jeu)
             difficulté.boucle++;
-            if (difficulté.tour%difficulté.saut==0)
+            if (difficulté.boucle%difficulté.saut==0){
                 difficulté.tour++;
                 AjoutLigne();
                 difficulté.saut = 20-Math.floor(difficulté.tour/100)
+            }
     }
-    setInterval(Jeu,50);
+    setInterval(Jeu,30);
 })();
 
 
