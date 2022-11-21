@@ -16,7 +16,11 @@ var run = true;
 var ctx = canvas.getContext('2d');
 var prochainPiege=0;
 var nextRoad = ROAD;
-
+var difficulté = {
+    saut: 20,
+    tour:0,
+    boucle:0
+}
 
 ctx.strokeStyle = "red";
 ctx.fillStyle = "#00FF00";
@@ -45,19 +49,23 @@ canvas.height = WORLD.length*SIZE;
 canvas.width = WORLD[0].length*SIZE;
 
 document.addEventListener('keydown', function(evt){
-    if (evt.key == 'ArrowLeft'){
-        allerAGauche();
+    if (run){
+        evt.preventDefault();
+        if (evt.key == 'ArrowLeft'){
+            allerAGauche();
+        }
+        if (evt.key == 'ArrowRight'){
+            allerADroite();
+        }
+        if (evt.key == 'ArrowUp' || evt.key == ' '){
+            sauter();
+        }
+        if (evt.key == 'ArrowDown'){
+            glisser();
+        }
+        draw();
     }
-    if (evt.key == 'ArrowRight'){
-        allerADroite();
-    }
-    if (evt.key == 'ArrowUp' || evt.key == ' '){
-        sauter();
-    }
-    if (evt.key == 'ArrowDown'){
-        glisser();
-    }
-    draw();
+    evt.d
     //console.log(evt.key );
 });
 
@@ -218,9 +226,13 @@ function AjoutLigne(){
     console.log("👋");
     function Jeu(){
         if (jeu)
-            AjoutLigne();
+            difficulté.boucle++;
+            if (difficulté.tour%difficulté.saut==0)
+                difficulté.tour++;
+                AjoutLigne();
+                difficulté.saut = 20-Math.floor(difficulté.tour/100)
     }
-    setInterval(Jeu,200);
+    setInterval(Jeu,50);
 })();
 
 
