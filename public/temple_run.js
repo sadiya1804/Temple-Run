@@ -154,7 +154,8 @@ function colision(){
 
 function gameOver(){
     console.log("Game Over");
-    jeu = false;
+    run = false;
+    alert("Game Over");
 }
 function AjoutLigne(){
     if (nextRoad==ROAD1) r= ROAD;
@@ -188,7 +189,7 @@ function AjoutLigne(){
                 newLine[4]=BRANCHE;
                 break;
         };
-        prochainPiege = 5;
+        prochainPiege = 1+Math.floor(difficulté.saut/5);
     }
 
     
@@ -225,13 +226,14 @@ function AjoutLigne(){
 (function () {
     console.log("👋");
     function Jeu(){
-        if (jeu)
+        if (run){
             difficulté.boucle++;
             if (difficulté.boucle%difficulté.saut==0){
                 difficulté.tour++;
                 AjoutLigne();
                 difficulté.saut = 20-Math.floor(difficulté.tour/100)
             }
+        }
     }
     setInterval(Jeu,30);
 })();
