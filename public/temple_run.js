@@ -1,17 +1,52 @@
 const SIZE = 50;
 var EMPTY = "#588157";
-const ROAD = "#895737";
-const ROAD1 = "#704b34";
+img_D  = new Image()
+img_D.src = "images/S3.png"
+img_M  = new Image()
+img_M.src = "images/S2.png"
+img_G  = new Image()
+img_G.src = "images/S1.png"
+img_s  = new Image()
+img_s.src = "images/S7.png"
+var ROAD = {c:"#895737",
+    imgD: img_D,
+    imgM: img_M,
+    imgG: img_G,
+    imgS: img_s
+};
+img_D  = new Image()
+img_D.src = "images/S6.png"
+img_M  = new Image()
+img_M.src = "images/S5.png"
+img_G  = new Image()
+img_G.src = "images/S4.png"
+const ROAD1 = {c:"#704b34",
+    imgD: img_D,
+    imgM: img_M,
+    imgG: img_G,
+    imgS: img_s
+};
 const SKIN = "#F77F00";
 const SKINUP = "#eac39d";
 const SKINDOWN = "#775839";
-const FEU = "#f74222";
+img_D  = new Image()
+img_D.src = "images/Feu3.png"
+img_M  = new Image()
+img_M.src = "images/Feu2.png"
+img_G  = new Image()
+img_G.src = "images/Feu1.png"
+const FEU = {c:"#f74222",
+    imgD: img_D,
+    imgM: img_M,
+    imgG: img_G
+};
 const BRANCHE = "#605952";
 const TROU = "#000000";
 const ARBRE ="#0008ff";
 
 let img = new Image();
 img.src = "images/p1.png";
+
 
 var canvas = document.getElementById('zoneJeu');
 var run = true;
@@ -83,11 +118,41 @@ function draw(){
         for (c=0;c<WORLD[l].length;c++){
             cell = WORLD[l][c];
             ctx.fillStyle = cell;
-            if (cell==SKIN)
-                ctx.drawImage(img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-            else
-                ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-            
+            switch(cell){
+                case SKIN:
+                    ctx.drawImage(img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
+                case ROAD:
+                    if (c == 2)
+                        ctx.drawImage(ROAD.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 4)
+                        ctx.drawImage(ROAD.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 3)
+                        ctx.drawImage(ROAD.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else 
+                        ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
+                case ROAD1:
+                    if (c == 2)
+                        ctx.drawImage(ROAD1.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 4)
+                        ctx.drawImage(ROAD1.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 3)
+                        ctx.drawImage(ROAD1.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else 
+                        ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
+                case FEU:
+                    if (c == 2)
+                        ctx.drawImage(FEU.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 4)
+                        ctx.drawImage(FEU.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else 
+                        ctx.drawImage(FEU.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
+                default:
+                    ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+            }
         }
     }
     
