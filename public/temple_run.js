@@ -1,5 +1,5 @@
 const SIZE = 50;
-const EMPTY = "#588157";
+var EMPTY = "#588157";
 const ROAD = "#895737";
 const ROAD1 = "#704b34";
 const SKIN = "#F77F00";
@@ -10,15 +10,18 @@ const BRANCHE = "#605952";
 const TROU = "#000000";
 const ARBRE ="#0008ff";
 
+let img = new Image();
+img.src = "../image/p1.png";
 
 var canvas = document.getElementById('zoneJeu');
 var run = true;
 var ctx = canvas.getContext('2d');
 var prochainPiege=0;
 var nextRoad = ROAD;
+var stopRoute = -1;
 var difficulté = {
     saut: 20,
-    tour:0,
+    tour:5,
     boucle:0
 }
 
@@ -27,14 +30,14 @@ ctx.fillStyle = "#00FF00";
 
 var posSkin = {
     x: 3,
-    y: 0,
+    y: 1,
     saut:0,
     glisse:0
 };
 
 let WORLD = [
-    [EMPTY, EMPTY, ROAD1, SKIN, ROAD1, EMPTY, EMPTY],
-    [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
+    [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+    [EMPTY, EMPTY, ROAD, SKIN, ROAD, EMPTY, EMPTY],
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
     [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
@@ -80,7 +83,10 @@ function draw(){
         for (c=0;c<WORLD[l].length;c++){
             cell = WORLD[l][c];
             ctx.fillStyle = cell;
-            ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+            if (cell==SKIN)
+                ctx.drawImage(img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+            else
+                ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
             
         }
     }
@@ -92,21 +98,74 @@ function draw(){
 function allerADroite(){
     console.log("Droite");
     if (WORLD[posSkin.y][posSkin.x+2] == ROAD || WORLD[posSkin.y][posSkin.x+2] == ROAD1){
-        WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x+2];
-        posSkin.x+=2;
-        WORLD[posSkin.y][posSkin.x] = SKIN;
+        run=false;
+        setTimeout(goDroite,difficulté.saut*10+300,0)
+        
     }
+}
     
+function changeEnvironnement(){
+    posSkin.x = 3;
+    stopRoute = -1;
+    posSkin.y= 1;
+    if (EMPTY == "#588157")
+        EMPTY = "#444b66";
+    else EMPTY = "#588157";
+    WORLD = [
+    [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, SKIN, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, ROAD, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
+    creerLigne(),
+    creerLigne(),
+    creerLigne(),
+    creerLigne(),
+    creerLigne()];
+}
+
+
+function goDroite(x){
+    console.log(x);
+    if (x == 3){
+        changeEnvironnement();
+        draw();
+        run =true;
+    }
+    else{
+        WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x+1];
+        posSkin.x+=1;
+        WORLD[posSkin.y][posSkin.x] = SKIN;
+        draw();
+        setTimeout(goDroite,difficulté.saut*10+300,++x);
+    }
 }
 
 function allerAGauche(){
     console.log("Gauche");
     if (WORLD[posSkin.y][posSkin.x-2] == ROAD || WORLD[posSkin.y][posSkin.x-2] == ROAD1){
-        WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x-2];
-        posSkin.x-=2;
-        WORLD[posSkin.y][posSkin.x] = SKIN;
+        run=false;
+        setTimeout(goGauche,difficulté.saut*10+300,0)
+        
     }
 }
+function goGauche(x){
+    console.log(x)
+    if (x ==3){
+        changeEnvironnement();
+        draw();
+        run =true;
+    }
+    else{
+        WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x-1];
+        posSkin.x-=1;
+        WORLD[posSkin.y][posSkin.x] = SKIN;
+        draw();
+        setTimeout(goGauche,difficulté.saut*10+300,++x);
+    }
+}
+
+
 
 function sauter(){
     console.log("Saut");
@@ -146,6 +205,8 @@ function colision(){
             }else
                 return true
             
+        case EMPTY:
+            return true;
         default:
             return false;
     }
@@ -157,46 +218,97 @@ function gameOver(){
     run = false;
     alert("Game Over");
 }
-function AjoutLigne(){
+
+function cheminADroite(r){
+    return [EMPTY, EMPTY, r, r, r, r, r];
+}
+
+function cheminAGauche(r){
+    
+    return [r, r, r, r, r,EMPTY, EMPTY];
+}
+
+function cheminAGetD(r){
+    
+    return [r, r, r, r, r, r, r];
+}
+
+function creerLigne(){
     if (nextRoad==ROAD1) r= ROAD;
     else r = ROAD1;
     nextRoad = r;
-    
+    var newLine;
+    console.log(stopRoute);
 
-    var newLine = [EMPTY,EMPTY,r,r,r,EMPTY,EMPTY];
-    prochainPiege--;
-    if ((Math.floor(Math.random()*100))%4==0 && prochainPiege<0){
-        switch(Math.floor(Math.random()*100)%4){
-            case 0:
-                newLine[2]=FEU;
-                newLine[3]=FEU;
-                newLine[4]=FEU;
-                break;
-            case 1:
-                newLine[2]=ARBRE;
-                newLine[3]=ARBRE;
-                newLine[4]=ARBRE;
-                break;
-
-            case 2:
-                newLine[2]=TROU;
-                newLine[3]=TROU;
-                newLine[4]=TROU;
-                break;
-            case 3:
-                newLine[2]=BRANCHE;
-                newLine[3]=BRANCHE;
-                newLine[4]=BRANCHE;
-                break;
-        };
-        prochainPiege = 1+Math.floor(difficulté.saut/5);
+    if (stopRoute==0){
+        newLine = [EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY];
     }
+    else if (stopRoute>0){
+        newLine = [EMPTY,EMPTY,EMPTY,r,EMPTY,EMPTY,EMPTY];
+        stopRoute--;
+    }
+    else{
+        newLine = [EMPTY,EMPTY,r,r,r,EMPTY,EMPTY];
+        prochainPiege--;
+        if ((Math.floor(Math.random()*100))%4==0 && prochainPiege<0){
+            switch(Math.floor(Math.random()*100)%5){
+                case 0:
+                    newLine[2]=FEU;
+                    newLine[3]=FEU;
+                    newLine[4]=FEU;
+                    break;
+                case 1:
+                    newLine[2]=ARBRE;
+                    newLine[3]=ARBRE;
+                    newLine[4]=ARBRE;
+                    break;
 
-    
+                case 2:
+                    newLine[2]=TROU;
+                    newLine[3]=TROU;
+                    newLine[4]=TROU;
+                    break;
+                case 3:
+                    newLine[2]=BRANCHE;
+                    newLine[3]=BRANCHE;
+                    newLine[4]=BRANCHE;
+                    break;
+                case 4:
+                    switch (Math.floor(Math.random()*100)%3){
+                        case 0:
+                            newLine = cheminAGauche(r);
+                            break;
+                        case 1:
+                            newLine = cheminADroite(r);
+                            break;
+                        case 2:
+                            newLine = cheminAGetD(r);
+                            break;
+                    }
+                    if ((Math.floor(Math.random()*100))%4!=0)
+                        stopRoute = Math.floor((Math.random()*100))%6;
+
+            };
+            prochainPiege = 1+Math.floor(difficulté.saut/5);
+        }
+        
+    }
+    return newLine;
+}
+
+function AjoutLigne(){
+    newLine = creerLigne();
+
+    WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x-1];
+    if (WORLD[posSkin.y][posSkin.x] == EMPTY)
+        WORLD[posSkin.y][posSkin.x]  = ROAD;
 
     for (l=0;l<WORLD.length-1;l++){
             WORLD[l]=WORLD[l+1];
     }
+
+    
+
     WORLD.pop();
     WORLD.push(newLine);
     if (colision()){
@@ -205,7 +317,8 @@ function AjoutLigne(){
     }else{
     
         if (posSkin.glisse>0){
-            WORLD[posSkin.y][posSkin.x]=SKINDOWN;
+            if (!(WORLD[posSkin.y][posSkin.x]==FEU || WORLD[posSkin.y][posSkin.x]==ARBRE))
+                WORLD[posSkin.y][posSkin.x]=SKINDOWN;
         }
         else if (posSkin.saut>0){
             WORLD[posSkin.y][posSkin.x]=SKINUP;
@@ -227,15 +340,18 @@ function AjoutLigne(){
     console.log("👋");
     function Jeu(){
         if (run){
-            difficulté.boucle++;
-            if (difficulté.boucle%difficulté.saut==0){
-                difficulté.tour++;
+                console.log(difficulté.tour,difficulté.saut*10+300)
+                difficulté.tour--;
                 AjoutLigne();
-                difficulté.saut = 20-Math.floor(difficulté.tour/100)
-            }
+                
+                if (difficulté.tour==0){
+                    difficulté.saut--;
+                    difficulté.tour=10 * (20- difficulté.saut)
+                }
+            
         }
     }
-    setInterval(Jeu,30);
+    setInterval(Jeu,difficulté.saut*10+300);
 })();
 
 
