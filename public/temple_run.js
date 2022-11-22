@@ -11,7 +11,7 @@ const TROU = "#000000";
 const ARBRE ="#0008ff";
 
 let img = new Image();
-img.src = "../image/p1.png";
+img.src = "images/p1.png";
 
 var canvas = document.getElementById('zoneJeu');
 var run = true;
