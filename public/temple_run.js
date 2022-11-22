@@ -405,18 +405,21 @@ function AjoutLigne(){
     console.log("👋");
     function Jeu(){
         if (run){
-                console.log(difficulté.tour,difficulté.saut*10+300)
-                difficulté.tour--;
-                AjoutLigne();
-                
-                if (difficulté.tour==0){
-                    difficulté.saut--;
-                    difficulté.tour=10 * (20- difficulté.saut)
+                difficulté.boucle++;
+                if (difficulté.boucle%difficulté.saut == 0){
+                    console.log(difficulté.boucle,difficulté.tour,difficulté.saut);
+                    difficulté.tour--;
+                    AjoutLigne();
+                    
+                    if (difficulté.tour==0){
+                        difficulté.saut--;
+                        difficulté.tour=10 * (20- difficulté.saut)
+                    }
                 }
             
         }
     }
-    setInterval(Jeu,difficulté.saut*10+300);
+    setInterval(Jeu,30);
 })();
 
 
