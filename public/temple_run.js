@@ -1,4 +1,5 @@
 const SIZE = 50;
+const bt = document.getElementsByTagName("button")[0];
 var EMPTY = "#588157";
 img_D  = new Image()
 img_D.src = "images/S3.png"
@@ -49,7 +50,7 @@ img.src = "images/p1.png";
 
 
 var canvas = document.getElementById('zoneJeu');
-var run = true;
+var run = false;
 var ctx = canvas.getContext('2d');
 var prochainPiege=0;
 var nextRoad = ROAD;
@@ -106,7 +107,21 @@ document.addEventListener('keydown', function(evt){
     evt.d
     //console.log(evt.key );
 });
+bt.addEventListener('click',function(evt){
+    var largeurWin = window.innerWidth;
+    var hauteurWin = window.innerHeight;
+    if (hauteurWin<canvas.height){
+        canvas.style.bottom = '0px';
+    }else
+        canvas.style.bottom = Math.floor((hauteurWin-canvas.height)/2) + 'px';
+    
+    canvas.style.left = Math.floor((largeurWin-canvas.width)/2) + 'px';
+    canvas.style.position = 'fixed';
+    canvas.style.display = 'block';
+    bt.style.display ='none';
+    run = true;
 
+})
 
 function draw(){
     var l = 0;
@@ -303,7 +318,6 @@ function creerLigne(){
     else r = ROAD1;
     nextRoad = r;
     var newLine;
-    console.log(stopRoute);
 
     if (stopRoute==0){
         newLine = [EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY];
@@ -407,7 +421,6 @@ function AjoutLigne(){
         if (run){
                 difficulté.boucle++;
                 if (difficulté.boucle%difficulté.saut == 0){
-                    console.log(difficulté.boucle,difficulté.tour,difficulté.saut);
                     difficulté.tour--;
                     AjoutLigne();
                     
