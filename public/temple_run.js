@@ -127,7 +127,7 @@ function handleStart(evt) {
 
 function handleEnd(evt) {
   evt.preventDefault();
-  consol.log('touchEnd.');
+  console.log('touchEnd.');
 
   const touches = evt.changedTouches;
     
@@ -147,7 +147,7 @@ function handleEnd(evt) {
           allerAGauche();
         }
       }else{
-        if (diffy>0){
+        if (diffY>0){
           console.log("glisse_Haut");
           sauter();
         }
@@ -158,14 +158,14 @@ function handleEnd(evt) {
       }
       ongoingTouche = null;
     }  else {
-      consol.log(`impossible de déterminer le point de contact à faire avancer`);
+      console.log(`impossible de déterminer le point de contact à faire avancer`);
     }
   }
 }
 
 function handleCancel(evt){
   evt.preventDefault();
-  consol.log('touchcancel.');
+  console.log('touchcancel.');
 
   const touches = evt.changedTouches;
     
