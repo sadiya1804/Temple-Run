@@ -109,7 +109,7 @@ document.addEventListener('keydown', function(evt){
 });
 
 /**{ DeBut Tactil event test*/
-
+console.log("Tactil actif");
 canvas.addEventListener('touchstart', handleStart);
 canvas.addEventListener('touchend', handleEnd);
 canvas.addEventListener('touchcancel', handleCancel);
