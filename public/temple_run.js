@@ -1,6 +1,21 @@
-const SIZE = 50;
+h = window.innerHeight -10;
+w= window.innerWidth-10;
+h=Math.floor(h/10);
+w=Math.floor(w/7);
+const SIZE = Math.min(h,w);
 const bt = document.getElementsByTagName("button")[0];
-var EMPTY = "#588157";
+img_M  = new Image();
+img_M.src = "images/empty1.png";
+img_D  = new Image();
+img_D.src = "images/emptyD.png";
+img_G  = new Image();
+img_G.src = "images/emptyG.png";
+var EMPTY = {c: "#588157",
+
+img:img_M,
+imgD:img_D,
+imgG:img_G} ;
+
 img_D  = new Image()
 img_D.src = "images/S3.png"
 img_M  = new Image()
@@ -54,12 +69,14 @@ var run = false;
 var ctx = canvas.getContext('2d');
 var prochainPiege=0;
 var nextRoad = ROAD;
+
 var stopRoute = -1;
 var difficulté = {
     saut: 20,
     tour:5,
     boucle:0
 }
+
 
 ctx.strokeStyle = "red";
 ctx.fillStyle = "#00FF00";
@@ -68,7 +85,8 @@ var posSkin = {
     x: 3,
     y: 1,
     saut:0,
-    glisse:0
+    glisse:0,
+    dir:0
 };
 
 let WORLD = [
@@ -91,9 +109,11 @@ document.addEventListener('keydown', function(evt){
     if (run){
         evt.preventDefault();
         if (evt.key == 'ArrowLeft'){
+            posSkin.dir = +2;
             allerAGauche();
         }
         if (evt.key == 'ArrowRight'){
+            posSkin.dir = -2;
             allerADroite();
         }
         if (evt.key == 'ArrowUp' || evt.key == ' '){
@@ -141,10 +161,12 @@ function handleEnd(evt) {
       if (Math.abs(diffX)>=Math.abs(diffY)){
         if (diffX>0){
           console.log("glisse_Droite");
+          posSkin.dir = -2;
           allerADroite();
         }
         else{
           console.log("glisse_Gauche");
+          posSkin.dir = +2;
           allerAGauche();
         }
       }else{
@@ -179,10 +201,12 @@ function handleMoove(evt) {
         if (Math.abs(diffX)>=Math.abs(diffY)){
           if (diffX>0){
             console.log("glisse_Droite");
+            posSkin.dir = -2;
             allerADroite();
           }
           else{
             console.log("glisse_Gauche");
+            posSkin.dir = +2;
             allerAGauche();
           }
         }else{
@@ -284,6 +308,14 @@ function draw(){
                     else 
                         ctx.drawImage(FEU.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
+                case EMPTY:
+                    if (c == 1)
+                        ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 5)
+                        ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else 
+                        ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
                 default:
                     ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
             }
@@ -296,20 +328,22 @@ function draw(){
 
 function allerADroite(){
     console.log("Droite");
-    if (WORLD[posSkin.y][posSkin.x+2] == ROAD || WORLD[posSkin.y][posSkin.x+2] == ROAD1){
-        run=false;
-        setTimeout(goDroite,difficulté.saut*10+300,0)
+        if ((WORLD[posSkin.y][posSkin.x+2] == ROAD || WORLD[posSkin.y][posSkin.x+2] == ROAD1)&&run){  
+            run=false;
+            setTimeout(goDroite,difficulté.saut*10+300,0)
         
-    }
+        }
+    
 }
     
 function changeEnvironnement(){
+    posSkin.dir = 0;
     posSkin.x = 3;
     stopRoute = -1;
     posSkin.y= 1;
-    if (EMPTY == "#588157")
-        EMPTY = "#444b66";
-    else EMPTY = "#588157";
+    if (EMPTY.c == "#588157")
+        EMPTY.c = "#444b66";
+    else EMPTY.c = "#588157";
     WORLD = [
     [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, SKIN, EMPTY, EMPTY, EMPTY],
@@ -342,11 +376,11 @@ function goDroite(x){
 
 function allerAGauche(){
     console.log("Gauche");
-    if (WORLD[posSkin.y][posSkin.x-2] == ROAD || WORLD[posSkin.y][posSkin.x-2] == ROAD1){
-        run=false;
-        setTimeout(goGauche,difficulté.saut*10+300,0)
-        
-    }
+        if ((WORLD[posSkin.y][posSkin.x-2] == ROAD || WORLD[posSkin.y][posSkin.x-2] == ROAD1)&&run){
+            run=false;
+            setTimeout(goGauche,difficulté.saut*10+300,0)
+            
+        }
 }
 function goGauche(x){
     console.log(x)
@@ -483,8 +517,7 @@ function creerLigne(){
                             newLine = cheminAGetD(r);
                             break;
                     }
-                    if ((Math.floor(Math.random()*100))%4!=0)
-                        stopRoute = Math.floor((Math.random()*100))%6;
+                    stopRoute = Math.floor((Math.random()*100))%6;
 
             };
             prochainPiege = 1+Math.floor(difficulté.saut/5);
@@ -526,7 +559,12 @@ function AjoutLigne(){
         }
 
         
-
+        if (posSkin.dir>0){
+            allerAGauche();
+            posSkin.dir--;}
+        if (posSkin.dir<0){
+            allerADroite();
+            posSkin.dir++;}
         posSkin.glisse--;
         posSkin.saut--;
 
