@@ -113,6 +113,7 @@ console.log("Tactil actif");
 canvas.addEventListener('touchstart', handleStart);
 canvas.addEventListener('touchend', handleEnd);
 canvas.addEventListener('touchcancel', handleCancel);
+canvas.addEventListener('touchmove', handleMoove);
 
 let ongoingTouche = null;
 
@@ -148,12 +149,12 @@ function handleEnd(evt) {
         }
       }else{
         if (diffY>0){
-          console.log("glisse_Haut");
-          sauter();
-        }
-        else{
           console.log("glisse_Bas");
           glisser();
+        }
+        else{
+          console.log("glisse_Haut");
+          sauter();
         }
       }
       ongoingTouche = null;
@@ -162,6 +163,43 @@ function handleEnd(evt) {
     }
   }
 }
+
+function handleMoove(evt) {
+    evt.preventDefault();
+    console.log('touchEnd.');
+  
+    const touches = evt.changedTouches;
+      
+    for (let i = 0; i < touches.length; i++) {
+      const idx = ongoingTouchIndexById(touches[i].identifier);
+      if (idx >= 0) {
+        diffX = touches[i].pageX - ongoingTouche.pageX;
+        diffY = touches[i].pageY - ongoingTouche.pageY;
+  
+        if (Math.abs(diffX)>=Math.abs(diffY)){
+          if (diffX>0){
+            console.log("glisse_Droite");
+            allerADroite();
+          }
+          else{
+            console.log("glisse_Gauche");
+            allerAGauche();
+          }
+        }else{
+          if (diffY>0){
+            console.log("glisse_Bas");
+            glisser();
+          }
+          else{
+            console.log("glisse_Haut");
+            sauter();
+          }
+        }
+      }  else {
+        console.log(`impossible de déterminer le point de contact à faire avancer`);
+      }
+    }
+  }
 
 function handleCancel(evt){
   evt.preventDefault();
