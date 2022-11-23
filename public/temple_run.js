@@ -107,6 +107,87 @@ document.addEventListener('keydown', function(evt){
     evt.d
     //console.log(evt.key );
 });
+
+/**{ DeBut Tactil event test*/
+
+canvas.addEventListener('touchstart', handleStart);
+canvas.addEventListener('touchend', handleEnd);
+canvas.addEventListener('touchcancel', handleCancel);
+
+let ongoingTouche = null;
+
+function handleStart(evt) {
+    evt.preventDefault();
+    console.log('touchstart.');
+    const touches = evt.changedTouches;
+    if (ongoingTouche == null){
+        ongoingTouche = copyTouch(touches[0]);
+    }
+  }
+
+function handleEnd(evt) {
+  evt.preventDefault();
+  consol.log('touchEnd.');
+
+  const touches = evt.changedTouches;
+    
+  for (let i = 0; i < touches.length; i++) {
+    const idx = ongoingTouchIndexById(touches[i].identifier);
+    if (idx >= 0) {
+      diffX = touches[i].pageX - ongoingTouche.pageX;
+      diffY = touches[i].pageY - ongoingTouche.pageY;
+
+      if (Math.abs(diffX)>=Math.abs(diffY)){
+        if (diffX>0){
+          console.log("glisse_Droite");
+          allerADroite();
+        }
+        else{
+          console.log("glisse_Gauche");
+          allerAGauche();
+        }
+      }else{
+        if (diffy>0){
+          console.log("glisse_Haut");
+          sauter();
+        }
+        else{
+          console.log("glisse_Bas");
+          glisser();
+        }
+      }
+      ongoingTouche = null;
+    }  else {
+      consol.log(`impossible de déterminer le point de contact à faire avancer`);
+    }
+  }
+}
+
+function handleCancel(evt){
+  evt.preventDefault();
+  consol.log('touchcancel.');
+
+  const touches = evt.changedTouches;
+    
+  for (let i = 0; i < touches.length; i++) {
+    const idx = ongoingTouchIndexById(touches[i].identifier);
+    if (idx >= 0) {
+      ongoingTouche=null;
+    }
+  }
+}
+
+function ongoingTouchIndexById(idToFind) {
+  if (ongoingTouche.identifier == idToFind) {
+    return ongoingTouche.identifier;
+  }
+  return -1;  
+}
+
+function copyTouch({ identifier, pageX, pageY }) {
+  return { identifier, pageX, pageY };
+}
+/**}*/
 bt.addEventListener('click',function(evt){
     var largeurWin = window.innerWidth;
     var hauteurWin = window.innerHeight;
