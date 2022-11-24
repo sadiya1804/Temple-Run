@@ -4,61 +4,42 @@ h=Math.floor(h/10);
 w=Math.floor(w/7);
 const SIZE = Math.min(h,w);
 const bt = document.getElementsByTagName("button")[0];
-img_M  = new Image();
-img_M.src = "images/empty1.png";
-img_D  = new Image();
-img_D.src = "images/emptyD.png";
-img_G  = new Image();
-img_G.src = "images/emptyG.png";
 var EMPTY = {c: "#588157",
-
-img:img_M,
-imgD:img_D,
-imgG:img_G} ;
-
-img_D  = new Image()
-img_D.src = "images/S3.png"
-img_M  = new Image()
-img_M.src = "images/S2.png"
-img_G  = new Image()
-img_G.src = "images/S1.png"
-img_s  = new Image()
-img_s.src = "images/S7.png"
+n:"empty",
+img:createImg("images/empty1.png"),
+imgD:createImg("images/emptyD.png"),
+imgG:createImg("images/emptyG.png")
+} ;
 var ROAD = {c:"#895737",
-    imgD: img_D,
-    imgM: img_M,
-    imgG: img_G,
-    imgS: img_s
+    n:"road",
+    imgD: createImg("images/S3.png"),
+    imgM: createImg("images/S2.png"),
+    imgG: createImg("images/S1.png"),
+    imgS: createImg("images/S7.png")
 };
-img_D  = new Image()
-img_D.src = "images/S6.png"
-img_M  = new Image()
-img_M.src = "images/S5.png"
-img_G  = new Image()
-img_G.src = "images/S4.png"
 const ROAD1 = {c:"#704b34",
-    imgD: img_D,
-    imgM: img_M,
-    imgG: img_G,
-    imgS: img_s
+    n:"road1",
+    imgD: createImg("images/S6.png"),
+    imgM: createImg("images/S5.png"),
+    imgG: createImg("images/S4.png"),
+    imgS: createImg("images/S7.png")
 };
 const SKIN = "#F77F00";
 const SKINUP = "#eac39d";
 const SKINDOWN = "#775839";
-img_D  = new Image()
-img_D.src = "images/Feu3.png"
-img_M  = new Image()
-img_M.src = "images/Feu2.png"
-img_G  = new Image()
-img_G.src = "images/Feu1.png"
-const FEU = {c:"#f74222",
-    imgD: img_D,
-    imgM: img_M,
-    imgG: img_G
+const FEU = {c:"#f74222",n:"feu",
+    imgD: createImg("images/Feu3.png"),
+    imgM: createImg("images/Feu2.png"),
+    imgG: createImg("images/Feu1.png")
 };
 const BRANCHE = "#605952";
 const TROU = "#000000";
-const ARBRE ="#0008ff";
+const ARBRE ={c:"#0008ff",n:"arbre",
+imgD: createImg("images/arbre4.png"),
+imgM: createImg("images/arbre3.png"),
+imgG: createImg("images/arbre2.png"),
+imgS: createImg("images/arbre1.png")
+};
 
 let img = new Image();
 img.src = "images/p1.png";
@@ -136,6 +117,12 @@ canvas.addEventListener('touchcancel', handleCancel);
 canvas.addEventListener('touchmove', handleMoove);
 
 let ongoingTouche = null;
+
+function createImg(source){
+    let image = new Image();
+    image.src = source;
+    return image;
+}
 
 function handleStart(evt) {
     evt.preventDefault();
@@ -266,6 +253,25 @@ bt.addEventListener('click',function(evt){
 
 })
 
+
+function quelleObs(y){
+    
+    switch(posSkin.x){
+        case 2:
+        case 3:
+            x=4;
+            break;
+        case 4:
+            x=2;
+            break;
+        default:
+            x=-1;
+    }
+    if (y<0||x<0||y>9)
+        return -1;
+    return WORLD[y][x];
+}
+
 function draw(){
     var l = 0;
     var c =0;
@@ -281,8 +287,10 @@ function draw(){
                     ctx.drawImage(img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
                 case ROAD:
-                    if (c == 2)
+                    if (c == 2){
                         ctx.drawImage(ROAD.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        if (quelleObs(l-1)==ARBRE){
+                            ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}}
                     else if (c == 4)
                         ctx.drawImage(ROAD.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else if (c == 3)
@@ -291,14 +299,30 @@ function draw(){
                         ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
                 case ROAD1:
-                    if (c == 2)
+                    if (c == 2){
                         ctx.drawImage(ROAD1.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        if (quelleObs(l-1)==ARBRE){
+                            ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}}
                     else if (c == 4)
                         ctx.drawImage(ROAD1.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else if (c == 3)
                         ctx.drawImage(ROAD1.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else 
                         ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
+                case ARBRE:
+                    if (c == 2)
+                        ctx.drawImage(ROAD1.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 3)
+                        ctx.drawImage(ROAD1.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else 
+                        ctx.drawImage(ROAD1.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    if (c == 2)
+                        ctx.drawImage(ARBRE.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 3)
+                        ctx.drawImage(ARBRE.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else 
+                        ctx.drawImage(ARBRE.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
                 case FEU:
                     if (c == 2)
@@ -330,7 +354,8 @@ function allerADroite(){
     console.log("Droite");
         if ((WORLD[posSkin.y][posSkin.x+2] == ROAD || WORLD[posSkin.y][posSkin.x+2] == ROAD1)&&run){  
             run=false;
-            setTimeout(goDroite,difficulté.saut*10+300,0)
+            pause = 30 * difficulté.saut;
+            setTimeout(goDroite,pause,0)
         
         }
     
@@ -370,7 +395,8 @@ function goDroite(x){
         posSkin.x+=1;
         WORLD[posSkin.y][posSkin.x] = SKIN;
         draw();
-        setTimeout(goDroite,difficulté.saut*10+300,++x);
+        pause = 30 * difficulté.saut;
+        setTimeout(goDroite,pause,++x);
     }
 }
 
@@ -378,7 +404,8 @@ function allerAGauche(){
     console.log("Gauche");
         if ((WORLD[posSkin.y][posSkin.x-2] == ROAD || WORLD[posSkin.y][posSkin.x-2] == ROAD1)&&run){
             run=false;
-            setTimeout(goGauche,difficulté.saut*10+300,0)
+            pause = 30 * difficulté.saut;
+            setTimeout(goGauche,pause,0)
             
         }
 }
@@ -394,7 +421,8 @@ function goGauche(x){
         posSkin.x-=1;
         WORLD[posSkin.y][posSkin.x] = SKIN;
         draw();
-        setTimeout(goGauche,difficulté.saut*10+300,++x);
+        pause = 30 * difficulté.saut;
+        setTimeout(goGauche,pause,++x);
     }
 }
 
