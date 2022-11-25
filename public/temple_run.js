@@ -43,7 +43,7 @@ imgS: createImg("images/arbre1.png")
 
 let img = new Image();
 img.src = "images/p1.png";
-
+let jeuID;
 
 var canvas = document.getElementById('zoneJeu');
 var run = false;
@@ -69,6 +69,7 @@ var posSkin = {
     glisse:0,
     dir:0
 };
+var score = 0;
 
 let WORLD = [
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
@@ -249,6 +250,8 @@ bt.addEventListener('click',function(evt){
     canvas.style.position = 'fixed';
     canvas.style.display = 'block';
     bt.style.display ='none';
+    initJeu();
+    jeuID = setInterval(Jeu,30);
     run = true;
 
 })
@@ -426,7 +429,38 @@ function goGauche(x){
     }
 }
 
+function initJeu(){
+    score = 0;
+    WORLD = [
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, SKIN, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY]
+      ];
+    draw();
+    prochainPiege=0;
+    nextRoad = ROAD;
+    difficulté = {
+        saut: 20,
+        tour:5,
+        boucle:0
+    }
+    posSkin = {
+        x: 3,
+        y: 1,
+        saut:0,
+        glisse:0,
+        dir:0
+    };
 
+
+}
 
 function sauter(){
     console.log("Saut");
@@ -476,8 +510,12 @@ function colision(){
 
 function gameOver(){
     console.log("Game Over");
+    console.log("Score : "+score);
     run = false;
-    alert("Game Over");
+    alert("Game Over - Score : "+score);
+    clearInterval(jeuID);
+    canvas.style.display = 'none';
+    bt.style.display = 'block';
 }
 
 function cheminADroite(r){
@@ -600,25 +638,23 @@ function AjoutLigne(){
     }
 }
 
-(function () {
-    console.log("👋");
-    function Jeu(){
-        if (run){
-                difficulté.boucle++;
-                if (difficulté.boucle%difficulté.saut == 0){
-                    difficulté.tour--;
-                    AjoutLigne();
-                    
-                    if (difficulté.tour==0){
-                        difficulté.saut--;
-                        difficulté.tour=10 * (20- difficulté.saut)
-                    }
+function Jeu(){
+    if (run){
+            difficulté.boucle++;
+            if (difficulté.boucle%difficulté.saut == 0){
+                score++;
+                difficulté.tour--;
+                AjoutLigne();
+                
+                if (difficulté.tour==0){
+                    difficulté.saut--;
+                    difficulté.tour=10 * (20- difficulté.saut)
                 }
-            
-        }
+            }
+        
     }
-    setInterval(Jeu,30);
-})();
+}
+
 
 
 
