@@ -32,7 +32,19 @@ const ROAD1 = {c:"#704b34",
 };
 const SKIN = {c:"#F77F00",n:'skin',
     img1: createImg("images/p1.png"),
-    img2: createImg("images/p2.png")};
+    img: createImg("images/p2.png")};
+
+const imageSkin = {
+    img1:createImg("images/p1.png"),
+    img2:createImg("images/p2.png"),
+    imgD1:createImg("images/pD1.png"),
+    imgD2:createImg("images/pD2.png"),
+    imgG1:createImg("images/pG1.png"),
+    imgG2:createImg("images/pG2.png"),
+    imgUp:createImg("images/pUP.png"),
+    imgDown:createImg("images/pDown.png"),
+}
+
 const SKINUP = {c:"#eac39d",n:'skinUp',
             img:createImg("images/pUP.png")};
 const SKINDOWN = {c:"#775839",n:'skinDown',
@@ -295,6 +307,33 @@ function quelleObs(y){
     return WORLD[y][x];
 }
 
+function dessinerLepiege(c,l,cell){
+    if (c<2 || c>4)
+        return ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    if (l+2<WORLD.length)
+        route = quelleObs(l+2);
+    else 
+        route = quelleObs(l-2);
+
+    if (c == 2)
+        ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    else if (c == 3)
+        ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    else 
+        ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    if (posSkin.y == l && posSkin.x == c && posSkin.glisse>0 && (cell==ARBRE || cell==FEU)){
+        ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    }
+    if (c == 2)
+        ctx.drawImage(cell.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    else if (c == 3)
+        ctx.drawImage(cell.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    else 
+        ctx.drawImage(cell.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+    
+}
+
+
 function draw(){
     let l = 0;
     let c =0;
@@ -305,70 +344,19 @@ function draw(){
             ctx.fillStyle = cell;
             switch(cell){
                 case ROAD:
-                    if (c == 2){
-                        ctx.drawImage(ROAD.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        if (quelleObs(l-1)==ARBRE){
-                            ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}}
-                    else if (c == 4)
-                        ctx.drawImage(ROAD.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else if (c == 3)
-                        ctx.drawImage(ROAD.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else 
-                        ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    break;
                 case ROAD1:
                     if (c == 2){
-                        ctx.drawImage(ROAD1.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         if (quelleObs(l-1)==ARBRE){
                             ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}}
                     else if (c == 4)
-                        ctx.drawImage(ROAD1.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else if (c == 3)
-                        ctx.drawImage(ROAD1.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else 
-                        ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
-                case ARBRE:
-                    if (c == 2)
-                        ctx.drawImage(ROAD1.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else if (c == 3)
-                        ctx.drawImage(ROAD1.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else 
-                        ctx.drawImage(ROAD1.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    if (posSkin.y == l && posSkin.x == c && posSkin.glisse>0){
-                        ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    }
-                    if (c == 2)
-                        ctx.drawImage(ARBRE.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else if (c == 3)
-                        ctx.drawImage(ARBRE.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else 
-                        ctx.drawImage(ARBRE.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    break;
-                case FEU:
-                    if (l+2<WORLD.length)
-                        route = quelleObs(l+2);
-                    else 
-                        route = quelleObs(l-2);
 
-                    if (c == 2)
-                        ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else if (c == 3)
-                        ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else 
-                        ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    
-                    if (posSkin.y == l && posSkin.x == c && posSkin.glisse>0){
-                        ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    }
-
-                    if (c == 2)
-                        ctx.drawImage(FEU.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else if (c == 4)
-                        ctx.drawImage(FEU.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    else 
-                        ctx.drawImage(FEU.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    break;
                 case EMPTY:
                     if (c == 1 && WORLD[l][2]!=EMPTY){
                         ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
@@ -390,77 +378,44 @@ function draw(){
                         ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     
                     break;
+                   
+                case ARBRE:
+                case FEU:
                 case BRANCHE:
-                    if (l+2<WORLD.length)
-                        route = quelleObs(l+2);
-                    else 
-                        route = quelleObs(l-2);
-                    if (c == 2)
-                    {
-                        ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        ctx.drawImage(BRANCHE.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
-                    else if (c == 3)
-                    {
-                        ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        ctx.drawImage(BRANCHE.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
-                    else 
-                    {
-                        ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        ctx.drawImage(BRANCHE.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
-                    break;
                 case TROU:
-                    if (l+2<WORLD.length)
-                        route = quelleObs(l+2);
-                    else 
-                        route = quelleObs(l-2);
-                    if (c == 2)
-                    {
-                        ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        ctx.drawImage(TROU.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
-                    else if (c == 3)
-                    {
-                        ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        ctx.drawImage(TROU.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
-                    else 
-                    {
-                        ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        ctx.drawImage(TROU.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
+                    dessinerLepiege(c,l,cell);
                     break;
                 case SKIN:
-                    if (quelleObs(l)==ROAD1){
-                        route = ROAD1;
-                        imgSkin = SKIN.img1;}
-                    else {
-                        route = ROAD;
-                        imgSkin = SKIN.img2;}
-                    ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    ctx.drawImage(imgSkin,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    break;
-                case SKINDOWN:
-                    if (quelleObs(l)==ROAD1)
-                        route = ROAD1;
-                    else 
-                        route = ROAD;
-                    ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    break;
-                case SKINUP:
-                    if (quelleObs(l)==EMPTY)
-                    {
-                        route = ROAD.imgM;
+                    obs = quelleObs(l);
+                    if (obs==EMPTY){
+                        if (WORLD[l+1][c]==ROAD)
+                            obs = ROAD1;
+                        else
+                            obs = ROAD;
                     }
+                    if (obs == ROAD || obs == ROAD1)
+                        switch (c){
+                            case 2:
+                                ctx.drawImage(obs.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                                break;
+                            case 3:
+                                ctx.drawImage(obs.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                                break;
+                            case 4:
+                                ctx.drawImage(obs.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                                break;
+                            default:
+                                ctx.drawImage(obs.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        }
                     else
-                        route = quelleObs(l).imgM;
-                    ctx.drawImage(route,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    ctx.drawImage(SKINUP.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        dessinerLepiege(c,l,obs);
+                    ctx.drawImage(SKIN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
                 default:
                     ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);                
             }
         }
-    }
-    
-    
+    } 
     
 }
 
@@ -511,6 +466,7 @@ function goDroite(x){
     console.log(x);
     if (x == 3){
         changeEnvironnement();
+        SKIN.img = imageSkin.img1;
         draw();
         run =true;
     }
@@ -518,6 +474,10 @@ function goDroite(x){
         WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x+1];
         posSkin.x+=1;
         WORLD[posSkin.y][posSkin.x] = SKIN;
+        if (SKIN.img == imageSkin.imgD1)
+            SKIN.img = imageSkin.imgD2;
+        else
+            SKIN.img = imageSkin.imgD1;
         draw();
         pause = 30 * difficulté.saut;
         setTimeout(goDroite,pause,++x);
@@ -537,6 +497,7 @@ function goGauche(x){
     console.log(x)
     if (x ==3){
         changeEnvironnement();
+        SKIN.img = imageSkin.img1;
         draw();
         run =true;
     }
@@ -544,6 +505,11 @@ function goGauche(x){
         WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x-1];
         posSkin.x-=1;
         WORLD[posSkin.y][posSkin.x] = SKIN;
+        
+        if (SKIN.img == imageSkin.imgG1)
+            SKIN.img = imageSkin.imgG2;
+        else
+            SKIN.img = imageSkin.imgG1;
         draw();
         pause = 30 * difficulté.saut;
         setTimeout(goGauche,pause,++x);
@@ -588,7 +554,7 @@ function sauter(){
     if (posSkin.saut<-1){
         posSkin.glisse=-1;
         posSkin.saut=2;
-        WORLD[posSkin.y][posSkin.x]=SKINUP
+        SKIN.img = imageSkin.imgUp;
     }
 
 }
@@ -598,7 +564,7 @@ function glisser(){
     if (posSkin.glisse<-1){
         posSkin.saut=-1;
         posSkin.glisse=2;
-        WORLD[posSkin.y][posSkin.x]=SKINDOWN
+        SKIN.img = imageSkin.imgDown;
     }
 }
 
@@ -653,7 +619,6 @@ function cheminAGetD(r){
     return [r, r, r, r, r, r, r];
 }
 
-
 function creerLigne(){
     if (nextRoad==ROAD1) r= ROAD;
     else r = ROAD1;
@@ -662,10 +627,6 @@ function creerLigne(){
 
     if (stopRoute==0){
         newLine = [EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY];
-    }
-    else if (stopRoute>0){
-        newLine = [EMPTY,EMPTY,EMPTY,r,EMPTY,EMPTY,EMPTY];
-        stopRoute--;
     }
     else{
         newLine = [EMPTY,EMPTY,r,r,r,EMPTY,EMPTY];
@@ -705,7 +666,7 @@ function creerLigne(){
                             newLine = cheminAGetD(r);
                             break;
                     }
-                    stopRoute = Math.floor((Math.random()*100))%6;
+                    stopRoute = 0;
 
             };
             prochainPiege = 1+Math.floor(difficulté.saut/5);
@@ -731,22 +692,19 @@ function AjoutLigne(){
     WORLD.pop();
     WORLD.push(newLine);
     if (colision()){
-        gameOver();
         draw();
+        gameOver();
     }else{
-    
-        if (posSkin.glisse>0){
-            if (!(WORLD[posSkin.y][posSkin.x]==FEU || WORLD[posSkin.y][posSkin.x]==ARBRE))
-                WORLD[posSkin.y][posSkin.x]=SKINDOWN;
-        }
-        else if (posSkin.saut>0){
-            WORLD[posSkin.y][posSkin.x]=SKINUP;
-        }
-        else{
-            WORLD[posSkin.y][posSkin.x]=SKIN;
-        }
-
         
+        if (!((WORLD[posSkin.y][posSkin.x]==FEU && posSkin.glisse>0) || WORLD[posSkin.y][posSkin.x]==ARBRE)){
+        WORLD[posSkin.y][posSkin.x]=SKIN;
+        if (!(posSkin.glisse>0 || posSkin.saut>0))
+            if (SKIN.img == imageSkin.img1)
+                SKIN.img = imageSkin.img2;
+            else
+                SKIN.img = imageSkin.img1;
+        
+        }
         if (posSkin.dir>0){
             allerAGauche();
             posSkin.dir--;}
