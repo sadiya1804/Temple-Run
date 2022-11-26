@@ -1,0 +1,21 @@
+/*canvas{
+    border: 5px solid #BADA55;
+}*/
+body{
+    background-image: url("./images/bac.png");
+    background-size: cover;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-position: center; 
+    background-repeat: no-repeat; 
+   /* background-size: cover; */
+}
+
+section{
+    display: block;
+    vertical-align: text-top;
+    text-align: center;
+    font-size: larger;
+    font-weight: 100;
+  
+}
