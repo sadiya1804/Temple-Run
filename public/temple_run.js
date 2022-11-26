@@ -32,9 +32,11 @@ const SKINUP = {c:"#eac39d",n:'skinUp',
 const SKINDOWN = {c:"#775839",n:'skinDown',
     img: createImg("images/pDown.png")};
 const FEU = {c:"#f74222",n:"feu",
+    imgDD: createImg("images/Feu4.png"),
     imgD: createImg("images/Feu3.png"),
     imgM: createImg("images/Feu2.png"),
-    imgG: createImg("images/Feu1.png")
+    imgG: createImg("images/Feu1.png"),
+    imgGG: createImg("images/Feu0.png")
 };
 const BRANCHE = {c:"#605952",n:"branche",
     imgDD: createImg("images/branche5.png"),
@@ -341,6 +343,22 @@ function draw(){
                         ctx.drawImage(ARBRE.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
                 case FEU:
+                    if (l+2<WORLD.length)
+                        route = quelleObs(l+2);
+                    else 
+                        route = quelleObs(l-2);
+
+                    if (c == 2)
+                        ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else if (c == 3)
+                        ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    else 
+                        ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    
+                    if (posSkin.y == l && posSkin.x == c && posSkin.glisse>0){
+                        ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    }
+
                     if (c == 2)
                         ctx.drawImage(FEU.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else if (c == 4)
@@ -353,12 +371,18 @@ function draw(){
                         ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         if (quelleObs(l)==BRANCHE)
                             ctx.drawImage(BRANCHE.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        
+                        if (quelleObs(l)==FEU)
+                            ctx.drawImage(FEU.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         }
                     else if (c == 5 && WORLD[l][4]!=EMPTY){
                         ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         if (quelleObs(l)==BRANCHE)
                             ctx.drawImage(BRANCHE.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        }
+                        
+                        if (quelleObs(l)==FEU)
+                            ctx.drawImage(FEU.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    } 
                     else 
                         ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     
