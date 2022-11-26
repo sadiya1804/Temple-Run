@@ -24,9 +24,13 @@ const ROAD1 = {c:"#704b34",
     imgG: createImg("images/S4.png"),
     imgS: createImg("images/S7.png")
 };
-const SKIN = "#F77F00";
-const SKINUP = "#eac39d";
-const SKINDOWN = "#775839";
+const SKIN = {c:"#F77F00",n:'skin',
+    img1: createImg("images/p1.png"),
+    img2: createImg("images/p2.png")};
+const SKINUP = {c:"#eac39d",n:'skinUp',
+            img:createImg("images/pUP.png")};
+const SKINDOWN = {c:"#775839",n:'skinDown',
+    img: createImg("images/pDown.png")};
 const FEU = {c:"#f74222",n:"feu",
     imgD: createImg("images/Feu3.png"),
     imgM: createImg("images/Feu2.png"),
@@ -287,19 +291,14 @@ function quelleObs(y){
 }
 
 function draw(){
-    var l = 0;
-    var c =0;
-
-    
+    let l = 0;
+    let c =0;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     for (l=0;l<WORLD.length;l++){
         for (c=0;c<WORLD[l].length;c++){
             cell = WORLD[l][c];
             ctx.fillStyle = cell;
             switch(cell){
-                case SKIN:
-                    ctx.drawImage(img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                    break;
                 case ROAD:
                     if (c == 2){
                         ctx.drawImage(ROAD.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
@@ -331,6 +330,9 @@ function draw(){
                         ctx.drawImage(ROAD1.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else 
                         ctx.drawImage(ROAD1.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    if (posSkin.y == l && posSkin.x == c && posSkin.glisse>0){
+                        ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    }
                     if (c == 2)
                         ctx.drawImage(ARBRE.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else if (c == 3)
@@ -361,7 +363,6 @@ function draw(){
                         ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     
                     break;
-
                 case BRANCHE:
                     if (l+2<WORLD.length)
                         route = quelleObs(l+2);
@@ -380,7 +381,6 @@ function draw(){
                         ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         ctx.drawImage(BRANCHE.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
                     break;
-
                 case TROU:
                     if (l+2<WORLD.length)
                         route = quelleObs(l+2);
@@ -399,9 +399,36 @@ function draw(){
                         ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         ctx.drawImage(TROU.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}
                     break;
-
+                case SKIN:
+                    if (quelleObs(l)==ROAD1){
+                        route = ROAD1;
+                        imgSkin = SKIN.img1;}
+                    else {
+                        route = ROAD;
+                        imgSkin = SKIN.img2;}
+                    ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    ctx.drawImage(imgSkin,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
+                case SKINDOWN:
+                    if (quelleObs(l)==ROAD1)
+                        route = ROAD1;
+                    else 
+                        route = ROAD;
+                    ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
+                case SKINUP:
+                    if (quelleObs(l)==EMPTY)
+                    {
+                        route = ROAD.imgM;
+                    }
+                    else
+                        route = quelleObs(l).imgM;
+                    ctx.drawImage(route,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    ctx.drawImage(SKINUP.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    break;
                 default:
-                    ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);                
             }
         }
     }
