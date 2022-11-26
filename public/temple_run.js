@@ -30,11 +30,10 @@ const ROAD1 = {c:"#704b34",
     imgG: createImg("images/S4.png"),
     imgS: createImg("images/S7.png")
 };
-const SKIN = {c:"#F77F00",n:'skin',
-    img1: createImg("images/p1.png"),
+const PLAYER = {c:"#F77F00",n:'skin',
     img: createImg("images/p2.png")};
 
-const imageSkin = {
+const imagePlayer = {
     img1:createImg("images/p1.png"),
     img2:createImg("images/p2.png"),
     imgD1:createImg("images/pD1.png"),
@@ -45,10 +44,6 @@ const imageSkin = {
     imgDown:createImg("images/pDown.png"),
 }
 
-const SKINUP = {c:"#eac39d",n:'skinUp',
-            img:createImg("images/pUP.png")};
-const SKINDOWN = {c:"#775839",n:'skinDown',
-    img: createImg("images/pDown.png")};
 const FEU = {c:"#f74222",n:"feu",
     imgDD: createImg("images/Feu4.png"),
     imgD: createImg("images/Feu3.png"),
@@ -62,10 +57,18 @@ const BRANCHE = {c:"#605952",n:"branche",
     imgM:createImg("images/branche3.png"),
     imgG:createImg("images/branche2.png"),
     imgGG:createImg("images/branche1.png")};
-const TROU = {c:"#000000",n:"trou",
-    imgD: createImg("images/trou3.png"),
+const imagesTrou = {imgD: createImg("images/trou3.png"),
     imgM: createImg("images/trou2.png"),
-    imgG: createImg("images/trou1.png")};
+    imgG: createImg("images/trou1.png"),
+    imgD1: createImg("images/2trou3.png"),
+    imgM1: createImg("images/2trou2.png"),
+    imgG1: createImg("images/2trou1.png")}
+
+const TROU = {c:"#000000",n:"trou",
+    imgD: imagesTrou.imgD,
+    imgM: imagesTrou.imgM,
+    imgG: imagesTrou.imgG,};
+
 const ARBRE ={c:"#0008ff",n:"arbre",
 imgD: createImg("images/arbre4.png"),
 imgM: createImg("images/arbre3.png"),
@@ -73,8 +76,7 @@ imgG: createImg("images/arbre2.png"),
 imgS: createImg("images/arbre1.png")
 };
 
-let img = new Image();
-img.src = "images/p1.png";
+
 let jeuID;
 
 let canvas = document.getElementById('zoneJeu');
@@ -105,7 +107,7 @@ let score = 0;
 
 let WORLD = [
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
-    [EMPTY, EMPTY, ROAD, SKIN, ROAD, EMPTY, EMPTY],
+    [EMPTY, EMPTY, ROAD, PLAYER, ROAD, EMPTY, EMPTY],
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
     [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
@@ -124,11 +126,11 @@ document.addEventListener('keydown', function(evt){
         evt.preventDefault();
         if (evt.key == 'ArrowLeft'){
             posSkin.dir = +2;
-            allerAGauche();
+            actionGauche();
         }
         if (evt.key == 'ArrowRight'){
             posSkin.dir = -2;
-            allerADroite();
+            actionDroite();
         }
         if (evt.key == 'ArrowUp' || evt.key == ' '){
             sauter();
@@ -182,12 +184,12 @@ function handleEnd(evt) {
         if (diffX>0){
           console.log("glisse_Droite");
           posSkin.dir = -2;
-          allerADroite();
+          actionDroite();
         }
         else{
           console.log("glisse_Gauche");
           posSkin.dir = +2;
-          allerAGauche();
+          actionGauche();
         }
       }else{
         if (diffY>0){
@@ -222,12 +224,12 @@ function handleMoove(evt) {
           if (diffX>0){
             console.log("glisse_Droite");
             posSkin.dir = -2;
-            allerADroite();
+            actionDroite();
           }
           else{
             console.log("glisse_Gauche");
             posSkin.dir = +2;
-            allerAGauche();
+            actionGauche();
           }
         }else{
           if (diffY>0){
@@ -289,7 +291,7 @@ bt.addEventListener('click',function(evt){
 })
 
 
-function quelleObs(y){
+function quelleObstacleAlaLigne(y){
     
     switch(posSkin.x){
         case 2:
@@ -311,9 +313,9 @@ function dessinerLepiege(c,l,cell){
     if (c<2 || c>4)
         return ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
     if (l+2<WORLD.length)
-        route = quelleObs(l+2);
+        route = quelleObstacleAlaLigne(l+2);
     else 
-        route = quelleObs(l-2);
+        route = quelleObstacleAlaLigne(l-2);
 
     if (c == 2)
         ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
@@ -322,7 +324,7 @@ function dessinerLepiege(c,l,cell){
     else 
         ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
     if (posSkin.y == l && posSkin.x == c && posSkin.glisse>0 && (cell==ARBRE || cell==FEU)){
-        ctx.drawImage(SKINDOWN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(PLAYER.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
     }
     if (c == 2)
         ctx.drawImage(cell.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
@@ -347,7 +349,7 @@ function draw(){
                 case ROAD1:
                     if (c == 2){
                         ctx.drawImage(cell.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        if (quelleObs(l-1)==ARBRE){
+                        if (quelleObstacleAlaLigne(l-1)==ARBRE){
                             ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}}
                     else if (c == 4)
                         ctx.drawImage(cell.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
@@ -360,18 +362,18 @@ function draw(){
                 case EMPTY:
                     if (c == 1 && WORLD[l][2]!=EMPTY){
                         ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        if (quelleObs(l)==BRANCHE)
+                        if (quelleObstacleAlaLigne(l)==BRANCHE)
                             ctx.drawImage(BRANCHE.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         
-                        if (quelleObs(l)==FEU)
+                        if (quelleObstacleAlaLigne(l)==FEU)
                             ctx.drawImage(FEU.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         }
                     else if (c == 5 && WORLD[l][4]!=EMPTY){
                         ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-                        if (quelleObs(l)==BRANCHE)
+                        if (quelleObstacleAlaLigne(l)==BRANCHE)
                             ctx.drawImage(BRANCHE.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         
-                        if (quelleObs(l)==FEU)
+                        if (quelleObstacleAlaLigne(l)==FEU)
                             ctx.drawImage(FEU.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     } 
                     else 
@@ -385,8 +387,8 @@ function draw(){
                 case TROU:
                     dessinerLepiege(c,l,cell);
                     break;
-                case SKIN:
-                    obs = quelleObs(l);
+                case PLAYER:
+                    obs = quelleObstacleAlaLigne(l);
                     if (obs==EMPTY){
                         if (WORLD[l+1][c]==ROAD)
                             obs = ROAD1;
@@ -409,7 +411,7 @@ function draw(){
                         }
                     else
                         dessinerLepiege(c,l,obs);
-                    ctx.drawImage(SKIN.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    ctx.drawImage(PLAYER.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     break;
                 default:
                     ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);                
@@ -419,12 +421,12 @@ function draw(){
     
 }
 
-function allerADroite(){
+function actionDroite(){
     console.log("Droite");
         if ((WORLD[posSkin.y][posSkin.x+2] == ROAD || WORLD[posSkin.y][posSkin.x+2] == ROAD1)&&run){  
             run=false;
             pause = 30 * difficulté.saut;
-            setTimeout(goDroite,pause,0)
+            setTimeout(allerAdroite,pause,0)
         
         }
     
@@ -441,16 +443,22 @@ function changeEnvironnement(){
             EMPTY.img = imagesEmpty2[0];
             EMPTY.imgG = imagesEmpty2[2];
             EMPTY.imgD = imagesEmpty2[1];
+            TROU.imgD = imagesTrou.imgD1;
+            TROU.imgM = imagesTrou.imgM1;
+            TROU.imgG = imagesTrou.imgG1;
             }
         else {
             EMPTY.c = "#588157";
             EMPTY.img = imagesEmpty1[0];
             EMPTY.imgG = imagesEmpty1[2];
-            EMPTY.imgD = imagesEmpty1[1];}
+            EMPTY.imgD = imagesEmpty1[1];
+            TROU.imgD = imagesTrou.imgD;
+            TROU.imgM = imagesTrou.imgM;
+            TROU.imgG = imagesTrou.imgG;}
     }
     WORLD = [
     [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, SKIN, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, PLAYER, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, ROAD, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
@@ -462,57 +470,57 @@ function changeEnvironnement(){
 }
 
 
-function goDroite(x){
+function allerAdroite(x){
     console.log(x);
     if (x == 3){
         changeEnvironnement();
-        SKIN.img = imageSkin.img1;
+        PLAYER.img = imagePlayer.img1;
         draw();
         run =true;
     }
     else{
         WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x+1];
         posSkin.x+=1;
-        WORLD[posSkin.y][posSkin.x] = SKIN;
-        if (SKIN.img == imageSkin.imgD1)
-            SKIN.img = imageSkin.imgD2;
+        WORLD[posSkin.y][posSkin.x] = PLAYER;
+        if (PLAYER.img == imagePlayer.imgD1)
+            PLAYER.img = imagePlayer.imgD2;
         else
-            SKIN.img = imageSkin.imgD1;
+            PLAYER.img = imagePlayer.imgD1;
         draw();
         pause = 30 * difficulté.saut;
-        setTimeout(goDroite,pause,++x);
+        setTimeout(allerAdroite,pause,++x);
     }
 }
 
-function allerAGauche(){
+function actionGauche(){
     console.log("Gauche");
         if ((WORLD[posSkin.y][posSkin.x-2] == ROAD || WORLD[posSkin.y][posSkin.x-2] == ROAD1)&&run){
             run=false;
             pause = 30 * difficulté.saut;
-            setTimeout(goGauche,pause,0)
+            setTimeout(allerAgauche,pause,0)
             
         }
 }
-function goGauche(x){
+function allerAgauche(x){
     console.log(x)
     if (x ==3){
         changeEnvironnement();
-        SKIN.img = imageSkin.img1;
+        PLAYER.img = imagePlayer.img1;
         draw();
         run =true;
     }
     else{
         WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x-1];
         posSkin.x-=1;
-        WORLD[posSkin.y][posSkin.x] = SKIN;
+        WORLD[posSkin.y][posSkin.x] = PLAYER;
         
-        if (SKIN.img == imageSkin.imgG1)
-            SKIN.img = imageSkin.imgG2;
+        if (PLAYER.img == imagePlayer.imgG1)
+            PLAYER.img = imagePlayer.imgG2;
         else
-            SKIN.img = imageSkin.imgG1;
+            PLAYER.img = imagePlayer.imgG1;
         draw();
         pause = 30 * difficulté.saut;
-        setTimeout(goGauche,pause,++x);
+        setTimeout(allerAgauche,pause,++x);
     }
 }
 
@@ -520,7 +528,7 @@ function initJeu(){
     score = 0;
     WORLD = [
         [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD, SKIN, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, PLAYER, ROAD, EMPTY, EMPTY],
         [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
         [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
         [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
@@ -554,7 +562,7 @@ function sauter(){
     if (posSkin.saut<-1){
         posSkin.glisse=-1;
         posSkin.saut=2;
-        SKIN.img = imageSkin.imgUp;
+        PLAYER.img = imagePlayer.imgUp;
     }
 
 }
@@ -564,7 +572,7 @@ function glisser(){
     if (posSkin.glisse<-1){
         posSkin.saut=-1;
         posSkin.glisse=2;
-        SKIN.img = imageSkin.imgDown;
+        PLAYER.img = imagePlayer.imgDown;
     }
 }
 
@@ -697,19 +705,19 @@ function AjoutLigne(){
     }else{
         
         if (!((WORLD[posSkin.y][posSkin.x]==FEU && posSkin.glisse>0) || WORLD[posSkin.y][posSkin.x]==ARBRE)){
-        WORLD[posSkin.y][posSkin.x]=SKIN;
+        WORLD[posSkin.y][posSkin.x]=PLAYER;
         if (!(posSkin.glisse>0 || posSkin.saut>0))
-            if (SKIN.img == imageSkin.img1)
-                SKIN.img = imageSkin.img2;
+            if (PLAYER.img == imagePlayer.img1)
+                PLAYER.img = imagePlayer.img2;
             else
-                SKIN.img = imageSkin.img1;
+                PLAYER.img = imagePlayer.img1;
         
         }
         if (posSkin.dir>0){
-            allerAGauche();
+            actionGauche();
             posSkin.dir--;}
         if (posSkin.dir<0){
-            allerADroite();
+            actionDroite();
             posSkin.dir++;}
         posSkin.glisse--;
         posSkin.saut--;
