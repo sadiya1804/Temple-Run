@@ -6,15 +6,27 @@ const SIZE = Math.min(h,w);
 const bt = document.getElementsByTagName("button")[0];
 const imagesEmpty1 = [createImg("images/empty1.png"),
 createImg("images/emptyD.png"),
-createImg("images/emptyG.png")];
+createImg("images/emptyG.png"),
+createImg("images/emptyCoinHD.png"),
+createImg("images/emptyCoinHG.png"),
+createImg("images/emptyB.png"),
+createImg("images/emptyH.png")];
 const imagesEmpty2 = [createImg("images/empty2.png"),
 createImg("images/empty2D.png"),
-createImg("images/empty2G.png")];
+createImg("images/empty2G.png"),
+createImg("images/empty2HD.png"),
+createImg("images/empty2HG.png"),
+createImg("images/empty2B.png"),
+createImg("images/empty2H.png")];
 var EMPTY = {c: "#588157",
 n:"empty",
 img:imagesEmpty1[0],
 imgD:imagesEmpty1[1],
-imgG:imagesEmpty1[2]
+imgG:imagesEmpty1[2],
+imgCD:imagesEmpty1[3],
+imgCG:imagesEmpty1[4],
+imgB:imagesEmpty1[5],
+imgH:imagesEmpty1[6]
 } ;
 const ROAD = {c:"#895737",
     n:"road",
@@ -361,7 +373,13 @@ function draw(){
 
                 case EMPTY:
                     if (c == 1 && WORLD[l][2]!=EMPTY){
-                        ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        
+                        if (l+1<WORLD.length &&(WORLD[l+1][c] !=EMPTY))
+                            ctx.drawImage(EMPTY.imgCD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else
+                            ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        
+
                         if (quelleObstacleAlaLigne(l)==BRANCHE)
                             ctx.drawImage(BRANCHE.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         
@@ -369,13 +387,41 @@ function draw(){
                             ctx.drawImage(FEU.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         }
                     else if (c == 5 && WORLD[l][4]!=EMPTY){
-                        ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        if (l+1<WORLD.length &&(WORLD[l+1][c]!=EMPTY))
+                            ctx.drawImage(EMPTY.imgCG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else
+                            ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         if (quelleObstacleAlaLigne(l)==BRANCHE)
                             ctx.drawImage(BRANCHE.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                         
                         if (quelleObstacleAlaLigne(l)==FEU)
                             ctx.drawImage(FEU.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     } 
+                    else if (c==2){
+                        if ( l+1<WORLD.length && WORLD[l+1][c]!=EMPTY)   
+                            ctx.drawImage(EMPTY.imgCD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else if(WORLD[l][3]!=EMPTY)
+                            ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else if (l>0 && WORLD[l-1][c]!=EMPTY)
+                            ctx.drawImage(EMPTY.imgB,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else 
+                            ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    }
+                    else if (c==4) {  
+                        if (l+1<WORLD.length && WORLD[l+1][c]!=EMPTY)
+                            ctx.drawImage(EMPTY.imgCG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else if(WORLD[l][3]!=EMPTY)
+                            ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else if (l>0 && WORLD[l-1][c]!=EMPTY)
+                            ctx.drawImage(EMPTY.imgB,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        else 
+                            ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    }
+                    else if ((c==0 || c==6) && l+1<WORLD.length && WORLD[l+1][c]!=EMPTY){
+                        ctx.drawImage(EMPTY.imgH,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    }
+                    else if (l>0 && WORLD[l-1][c]!=EMPTY)
+                        ctx.drawImage(EMPTY.imgB,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     else 
                         ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
                     
@@ -443,6 +489,10 @@ function changeEnvironnement(){
             EMPTY.img = imagesEmpty2[0];
             EMPTY.imgG = imagesEmpty2[2];
             EMPTY.imgD = imagesEmpty2[1];
+            EMPTY.imgCD = imagesEmpty2[3];
+            EMPTY.imgCG = imagesEmpty2[4];
+            EMPTY.imgB = imagesEmpty2[5];
+            EMPTY.imgH = imagesEmpty2[6];
             TROU.imgD = imagesTrou.imgD1;
             TROU.imgM = imagesTrou.imgM1;
             TROU.imgG = imagesTrou.imgG1;
@@ -452,6 +502,10 @@ function changeEnvironnement(){
             EMPTY.img = imagesEmpty1[0];
             EMPTY.imgG = imagesEmpty1[2];
             EMPTY.imgD = imagesEmpty1[1];
+            EMPTY.imgCD = imagesEmpty1[3];
+            EMPTY.imgCG = imagesEmpty1[4];
+            EMPTY.imgB = imagesEmpty1[5];
+            EMPTY.imgH = imagesEmpty1[6];
             TROU.imgD = imagesTrou.imgD;
             TROU.imgM = imagesTrou.imgM;
             TROU.imgG = imagesTrou.imgG;}
