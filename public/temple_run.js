@@ -4,13 +4,19 @@ h=Math.floor(h/10);
 w=Math.floor(w/7);
 const SIZE = Math.min(h,w);
 const bt = document.getElementsByTagName("button")[0];
+const imagesEmpty1 = [createImg("images/empty1.png"),
+createImg("images/emptyD.png"),
+createImg("images/emptyG.png")];
+const imagesEmpty2 = [createImg("images/empty2.png"),
+createImg("images/empty2D.png"),
+createImg("images/empty2G.png")];
 var EMPTY = {c: "#588157",
 n:"empty",
-img:createImg("images/empty1.png"),
-imgD:createImg("images/emptyD.png"),
-imgG:createImg("images/emptyG.png")
+img:imagesEmpty1[0],
+imgD:imagesEmpty1[1],
+imgG:imagesEmpty1[2]
 } ;
-var ROAD = {c:"#895737",
+const ROAD = {c:"#895737",
     n:"road",
     imgD: createImg("images/S3.png"),
     imgM: createImg("images/S2.png"),
@@ -47,10 +53,7 @@ const BRANCHE = {c:"#605952",n:"branche",
 const TROU = {c:"#000000",n:"trou",
     imgD: createImg("images/trou3.png"),
     imgM: createImg("images/trou2.png"),
-    imgG: createImg("images/trou1.png")}
-;
-
-
+    imgG: createImg("images/trou1.png")};
 const ARBRE ={c:"#0008ff",n:"arbre",
 imgD: createImg("images/arbre4.png"),
 imgM: createImg("images/arbre3.png"),
@@ -62,14 +65,14 @@ let img = new Image();
 img.src = "images/p1.png";
 let jeuID;
 
-var canvas = document.getElementById('zoneJeu');
-var run = false;
-var ctx = canvas.getContext('2d');
-var prochainPiege=0;
-var nextRoad = ROAD;
+let canvas = document.getElementById('zoneJeu');
+let run = false;
+let ctx = canvas.getContext('2d');
+let prochainPiege=0;
+let nextRoad = ROAD;
 
-var stopRoute = -1;
-var difficulté = {
+let stopRoute = -1;
+let difficulté = {
     saut: 20,
     tour:5,
     boucle:0
@@ -79,14 +82,14 @@ var difficulté = {
 ctx.strokeStyle = "red";
 ctx.fillStyle = "#00FF00";
 
-var posSkin = {
+let posSkin = {
     x: 3,
     y: 1,
     saut:0,
     glisse:0,
     dir:0
 };
-var score = 0;
+let score = 0;
 
 let WORLD = [
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
@@ -477,9 +480,19 @@ function changeEnvironnement(){
     posSkin.x = 3;
     stopRoute = -1;
     posSkin.y= 1;
-    if (EMPTY.c == "#588157")
-        EMPTY.c = "#444b66";
-    else EMPTY.c = "#588157";
+    if (Math.floor(Math.random()*100)%4==0){
+        if (EMPTY.c == "#588157"){
+            EMPTY.c = "#444b66";
+            EMPTY.img = imagesEmpty2[0];
+            EMPTY.imgG = imagesEmpty2[2];
+            EMPTY.imgD = imagesEmpty2[1];
+            }
+        else {
+            EMPTY.c = "#588157";
+            EMPTY.img = imagesEmpty1[0];
+            EMPTY.imgG = imagesEmpty1[2];
+            EMPTY.imgD = imagesEmpty1[1];}
+    }
     WORLD = [
     [EMPTY, EMPTY, EMPTY, ROAD1, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, SKIN, EMPTY, EMPTY, EMPTY],
@@ -639,6 +652,7 @@ function cheminAGetD(r){
     
     return [r, r, r, r, r, r, r];
 }
+
 
 function creerLigne(){
     if (nextRoad==ROAD1) r= ROAD;
