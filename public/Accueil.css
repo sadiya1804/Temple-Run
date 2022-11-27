@@ -20,16 +20,16 @@ body{
 section{
     font-size: 30px;
     display: grid;
-    gap: 50px;
+    gap: 45px;
     text-align: center;
     max-height: 100vh;
 }
 
-span {
+.phrase {
     position: relative;
     font-family: "Avenir Next", sans-serif;
     font-weight: 900;
-    font-size: 44px;
+    font-size: 40px;
     text-transform: uppercase;
     font-style: italic;
     letter-spacing: 0.05em;
@@ -53,7 +53,7 @@ img{
     display: block;
     margin: auto;
     height: 400px;
-    width: 900px;
+    width: 950px;
 }
 
 
@@ -74,7 +74,7 @@ img{
 	font-size: 20px;
 	font-family: 'Staatliches', cursive;
 	letter-spacing: 5px;
-	background: #ffc421;
+	background: #f7cd59;
 	border: 2px solid black;
 	box-shadow: 0px 0px 0px rgba(0,0,0,0.4);
 	transition: 500ms;
@@ -114,6 +114,57 @@ img{
 			height: 15px;}
 }
 
-#button1:focus {
+
+
+#button2 {
+	width: 300px;
+	height: 50px;
+	cursor: pointer;
+	border: 0px solid #5b3f69;
+	background: #25451e;
+	transition: 200ms;
+}
+
+button span {
+	position: absolute;
+	transform: translateX(-50%) translateY(-50%);
+	font-size: 15px;
+	color: #000000;
+	transition: 500ms;
+    font-family: "Avenir Next", sans-serif;
+    font-weight: 800;
+}
+
+#button2::before, #button2::after {
+	content: '';
+	position: absolute;
+	margin-left: -75px;
+	margin-top: -25px;
+	width: 150px;
+	height: 40px;
+	z-index: -1;
+}
+
+#button2::before {
+	border: 5px solid #36562f;
+	transition:200ms;
+}
+
+#button2::after {
+	border: 5px solid #36562f;
+	transition: 500ms;
+}
+
+#button2:hover {
+	border: 5px solid #36562f;
+}
+
+#button2:hover span {
+	letter-spacing: 4px;
+	font-size: 15px;
+}
+
+
+button:focus {
 	outline: none;
 }
