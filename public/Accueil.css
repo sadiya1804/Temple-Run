@@ -22,7 +22,7 @@ section{
     display: grid;
     gap: 45px;
     text-align: center;
-    max-height: 100vh;
+    height: auto;
 }
 
 .phrase {
@@ -56,6 +56,23 @@ img{
     width: 950px;
 }
 
+@media screen and (max-width: 750px) {
+
+   
+    img{
+        display: block;
+        margin: auto;
+        width: auto;
+        height: auto;
+    }
+
+	
+    .phrase {
+        font-weight: 850;
+        font-size: 22px;
+    }
+
+}
 
 .noselect {
   -webkit-touch-callout: none;

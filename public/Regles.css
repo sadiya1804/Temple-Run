@@ -11,6 +11,8 @@ body{
     background-repeat: no-repeat;     
     background-size: auto;
 }
+
+
 img{
     display: block;
     margin: auto;
@@ -21,23 +23,74 @@ div{
     position:absolute;
     text-align: center;
     top:630px; 
-    width:1600px; 
+    width:1560px; 
     z-index:2;
     font-size:200%;
+}
+ul{
+    text-align: left;
+    width:300px; 
+    right: 30px;
+    left: 300px;
+    font-weight: 600;
+
+}
+li{
+    text-align: left;
+    width:300px; 
+    right: 30px;
+    left: 300px;
+    font-weight: 100;
 }
 
 section{
     position:absolute;
-    text-align: center;
+    text-align: left;
     top:100px; 
     right: 50px;
     left: 550px;
     width:450px; 
     z-index:2;
     font-size: 20px;
-
 }
 
+
+@media screen and (max-width: 750px) {
+   
+
+    img{
+        width: 400px;
+        height: 100vh;
+    }
+    section{
+        line-height: 24px;
+        top:130px; 
+        right: auto;
+        left:90px;
+        width:350px; 
+        font-size: 15px;
+    }
+
+    div{
+        top:710px; 
+        width:517px; 
+        z-index:2;
+        font-size:200%;
+    }
+    ul{
+        text-align: left;
+        width:300px; 
+        right: 30px;
+        left: 50px;
+        font-weight: 600;
+    }
+    li{
+        text-align: left;
+        left: 100pxs;
+        font-weight: 100;
+    }
+    
+}
 
 .noselect {
     -webkit-touch-callout: none;
@@ -54,7 +107,7 @@ section{
       width: 150px;
       height: 50px;
       cursor: pointer;
-      font-size: 20px;
+      font-size: 30px;
       font-family: 'Staatliches', cursive;
       letter-spacing: 5px;
       background: transparent;
