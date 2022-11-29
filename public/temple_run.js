@@ -139,10 +139,12 @@ document.addEventListener('keydown', function(evt){
         if (evt.key == 'ArrowLeft'){
             posSkin.dir = +2;
             actionGauche();
+            basculerAgauche();
         }
         if (evt.key == 'ArrowRight'){
             posSkin.dir = -2;
             actionDroite();
+            basculerAdroite();
         }
         if (evt.key == 'ArrowUp' || evt.key == ' '){
             sauter();
@@ -156,6 +158,17 @@ document.addEventListener('keydown', function(evt){
     //console.log(evt.key );
 });
 
+
+/**  Cette fonction retourne un element HtMl avec pour source l'argument
+ * 
+ * @param 
+*/
+function createImg(source){
+    let image = new Image();
+    image.src = source;
+    return image;
+}
+
 /**{ DeBut Tactil event test*/
 console.log("Tactil actif");
 canvas.addEventListener('touchstart', handleStart);
@@ -164,12 +177,6 @@ canvas.addEventListener('touchcancel', handleCancel);
 canvas.addEventListener('touchmove', handleMoove);
 
 let ongoingTouche = null;
-
-function createImg(source){
-    let image = new Image();
-    image.src = source;
-    return image;
-}
 
 function handleStart(evt) {
     evt.preventDefault();
@@ -303,8 +310,7 @@ bt.addEventListener('click',function(evt){
 })
 
 
-function quelleObstacleAlaLigne(y){
-    
+function quelleObstacleAlaLigne(y){    
     switch(posSkin.x){
         case 2:
         case 3:
@@ -328,7 +334,7 @@ function dessinerLepiege(c,l,cell){
         route = quelleObstacleAlaLigne(l+2);
     else 
         route = quelleObstacleAlaLigne(l-2);
-
+    console.log(route);
     if (c == 2)
         ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
     else if (c == 3)
@@ -458,6 +464,8 @@ function draw(){
                     else
                         dessinerLepiege(c,l,obs);
                     ctx.drawImage(PLAYER.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    if (c==2 && l-1>=0 && quelleObstacleAlaLigne(l-1)==ARBRE)
+                        ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE)
                     break;
                 default:
                     ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);                
@@ -469,7 +477,7 @@ function draw(){
 
 function actionDroite(){
     console.log("Droite");
-        if ((WORLD[posSkin.y][posSkin.x+2] == ROAD || WORLD[posSkin.y][posSkin.x+2] == ROAD1)&&run){  
+        if ((WORLD[posSkin.y][5] == ROAD || WORLD[posSkin.y][5] == ROAD1)&&run){  
             run=false;
             pause = 30 * difficulté.saut;
             setTimeout(allerAdroite,pause,0)
@@ -523,10 +531,8 @@ function changeEnvironnement(){
     creerLigne()];
 }
 
-
-function allerAdroite(x){
-    console.log(x);
-    if (x == 3){
+function allerAdroite(){
+    if (posSkin.x == 6){
         changeEnvironnement();
         PLAYER.img = imagePlayer.img1;
         draw();
@@ -542,22 +548,39 @@ function allerAdroite(x){
             PLAYER.img = imagePlayer.imgD1;
         draw();
         pause = 30 * difficulté.saut;
-        setTimeout(allerAdroite,pause,++x);
+        setTimeout(allerAdroite,pause);
+    }
+}
+
+
+function basculerAdroite(){
+    if (posSkin.x<4 && ( WORLD[posSkin.y][posSkin.x+1] == ROAD || WORLD[posSkin.y][posSkin.x+1] == ROAD1) && run){
+        WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x+1];
+        posSkin.x+=1;
+        WORLD[posSkin.y][posSkin.x]=PLAYER;
+        draw();
+    }
+}
+
+function basculerAgauche(){
+    if (posSkin.x>2 && (WORLD[posSkin.y][posSkin.x-1] == ROAD || WORLD[posSkin.y][posSkin.x-1] == ROAD1) && run){
+        WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x-1];
+        posSkin.x-=1;
+        WORLD[posSkin.y][posSkin.x]=PLAYER;
+        draw();
     }
 }
 
 function actionGauche(){
     console.log("Gauche");
-        if ((WORLD[posSkin.y][posSkin.x-2] == ROAD || WORLD[posSkin.y][posSkin.x-2] == ROAD1)&&run){
+        if ((WORLD[posSkin.y][1] == ROAD || WORLD[posSkin.y][1] == ROAD1)&&run){
             run=false;
             pause = 30 * difficulté.saut;
             setTimeout(allerAgauche,pause,0)
-            
         }
 }
-function allerAgauche(x){
-    console.log(x)
-    if (x ==3){
+function allerAgauche(){
+    if (posSkin.x == 0){
         changeEnvironnement();
         PLAYER.img = imagePlayer.img1;
         draw();
@@ -574,7 +597,7 @@ function allerAgauche(x){
             PLAYER.img = imagePlayer.imgG1;
         draw();
         pause = 30 * difficulté.saut;
-        setTimeout(allerAgauche,pause,++x);
+        setTimeout(allerAgauche,pause);
     }
 }
 
@@ -594,6 +617,7 @@ function initJeu(){
       ];
     draw();
     prochainPiege=0;
+    stopRoute = -1;
     nextRoad = ROAD;
     difficulté = {
         saut: 20,
@@ -741,9 +765,9 @@ function creerLigne(){
 function AjoutLigne(){
     newLine = creerLigne();
 
-    WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x-1];
-    if (WORLD[posSkin.y][posSkin.x] == EMPTY)
-        WORLD[posSkin.y][posSkin.x]  = ROAD;
+    WORLD[posSkin.y][posSkin.x]=quelleObstacleAlaLigne(posSkin.y);
+    if (WORLD[posSkin.y][posSkin.x]==EMPTY)
+        WORLD[posSkin.y][posSkin.x]=(nextRoad==ROAD)? ROAD1:ROAD;
 
     for (l=0;l<WORLD.length-1;l++){
             WORLD[l]=WORLD[l+1];
@@ -759,13 +783,13 @@ function AjoutLigne(){
     }else{
         
         if (!((WORLD[posSkin.y][posSkin.x]==FEU && posSkin.glisse>0) || WORLD[posSkin.y][posSkin.x]==ARBRE)){
-        WORLD[posSkin.y][posSkin.x]=PLAYER;
-        if (!(posSkin.glisse>0 || posSkin.saut>0))
-            if (PLAYER.img == imagePlayer.img1)
-                PLAYER.img = imagePlayer.img2;
-            else
-                PLAYER.img = imagePlayer.img1;
-        
+            WORLD[posSkin.y][posSkin.x]=PLAYER;
+            if (!(posSkin.glisse>0 || posSkin.saut>0))
+                if (PLAYER.img == imagePlayer.img1)
+                    PLAYER.img = imagePlayer.img2;
+                else
+                    PLAYER.img = imagePlayer.img1;
+            
         }
         if (posSkin.dir>0){
             actionGauche();
