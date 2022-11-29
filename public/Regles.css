@@ -63,7 +63,7 @@ section{
         height: 100vh;
     }
     section{
-        line-height: 24px;
+        line-height: 20px;
         top:130px; 
         right: auto;
         left:90px;
@@ -72,7 +72,7 @@ section{
     }
 
     div{
-        top:710px; 
+        top:590px; 
         width:517px; 
         z-index:2;
         font-size:200%;
