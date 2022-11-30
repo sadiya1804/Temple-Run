@@ -848,11 +848,23 @@ function creerLigne(){
 }
 
 function AjoutLigne(){
-    newLine = creerLigne();
+    if(tutoriel==true && stopRoute !=0){
+        newLine = chemin.pop();
 
-    WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x-1];
+        if(newLine[6] == ROAD1 ||newLine[0] == ROAD ){
+            prochainPiege=4;
+            stopRoute = 0;
+        }
+        if(chemin.length == 0){
+            tutoriel =false;
+        }
+    }
+    else{
+        newLine = creerLigne();
+    }
+    WORLD[posSkin.y][posSkin.x]=quelleObstacleAlaLigne(posSkin.y);
     if (WORLD[posSkin.y][posSkin.x] == EMPTY)
-        WORLD[posSkin.y][posSkin.x]  = ROAD;
+        WORLD[posSkin.y][posSkin.x]  = (nextRoad==ROAD)?ROAD:ROAD1;
 
     for (l=0;l<WORLD.length-1;l++){
             WORLD[l]=WORLD[l+1];
