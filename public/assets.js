@@ -145,10 +145,10 @@ const ARBRE ={
  * Objet contenant les images ou sont écrit les aides utilisé pendant le tutoriel
  */
 const TutorielImages = {
-    imgTournerG:createImg("images/TournerGauche.png"),
-    imgTournerD:createImg("images/TournerDroite.png"),
-    imgSauter:createImg("images/Sauter.png"),
-    imgGlisser:createImg("images/Glisser.png")
+    imgTournerG:createImg("images/TournerG.gif"),
+    imgTournerD:createImg("images/tournerD.gif"),
+    imgSauter:createImg("images/Sauter.gif"),
+    imgGlisser:createImg("images/glisser.gif")
 };
 
 /** 
