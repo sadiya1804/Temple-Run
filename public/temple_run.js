@@ -258,10 +258,19 @@ function copyTouch({ identifier, pageX, pageY }) {
 /**}*/
 
 (document.querySelector("#gameOver button")).addEventListener('click',lancerJeu);
+(document.querySelector("#rêgleJeu button")).addEventListener('click',lancerJeu);
 
+(document.getElementById("button2")).addEventListener('click',function(){
+    (document.querySelector("#titre")).style.display = "none";
+    screenGameOver.style.display = "none";
+    canvas.style.display = "none";
+    (document.querySelector("#rêgleJeu")).style.display = "block";
+
+});
 bt.addEventListener('click',lancerJeu);
 function lancerJeu(){
     screenGameOver.style.display = "none";
+    (document.querySelector("#rêgleJeu")).style.display = "none";
     (document.querySelector("#titre")).style.display = "none";
     var largeurWin = window.innerWidth;
     var hauteurWin = window.innerHeight;
@@ -287,6 +296,7 @@ function lancerJeu(){
 };
 
 (document.querySelector("#retour")).addEventListener('click',function(){
+    (document.querySelector("#rêgleJeu")).style.display = "none";
     screenGameOver.style.display = "none";
     canvas.style.display="none";
     (document.querySelector("#titre")).style.display = "block";
