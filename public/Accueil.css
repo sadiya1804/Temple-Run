@@ -73,6 +73,11 @@ img{
     }
 
 }
+canvas {
+	display: none;
+	border: 1px solid black; 
+	z-index: 10;
+  }
 
 .noselect {
   -webkit-touch-callout: none;
