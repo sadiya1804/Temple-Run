@@ -70,6 +70,9 @@ const ROAD1 = {
  */
 const PLAYER = {img: createImg("images/p2.png")};
 
+/**
+ * Tableau contenant toutes les images possible pour le joueur
+ */
 const imagePlayer = {
     img1:createImg("images/p1.png"),
     img2:createImg("images/p2.png"),
@@ -81,6 +84,10 @@ const imagePlayer = {
     imgDown:createImg("images/pDown.png"),
 };
 
+/**
+ * Objet utiliser dans le tableau world et pour l'affichage
+ * représentant l'obstacle du feu
+ */
 const FEU = {
     imgDD: createImg("images/Feu4.png"),
     imgD: createImg("images/Feu3.png"),
@@ -89,6 +96,10 @@ const FEU = {
     imgGG: createImg("images/Feu0.png")
 };
 
+/**
+ * Objet utiliser dans le tableau world et pour l'affichage
+ * représentant l'obstacle du branche
+ */
 const BRANCHE = {
     imgDD: createImg("images/branche5.png"),
     imgD: createImg("images/branche4.png"),
@@ -97,6 +108,9 @@ const BRANCHE = {
     imgGG:createImg("images/branche1.png")
 };
 
+/**
+ * Objet contenant les images des troue suivant les environnement
+ */
 const imagesTrou = {
     imgD: createImg("images/trou3.png"),
     imgM: createImg("images/trou2.png"),
@@ -106,12 +120,20 @@ const imagesTrou = {
     imgG1: createImg("images/2trou1.png")
 };
 
+/**
+ * Objet utiliser dans le tableau world et pour l'affichage
+ * représentant l'obstacle trou (les image changent suivant l'environnement)
+ */
 const TROU = {
     imgD: imagesTrou.imgD,
     imgM: imagesTrou.imgM,
     imgG: imagesTrou.imgG
 };
 
+/**
+ * Objet utiliser dans le tableau world et pour l'affichage
+ * représentant l'obstacle arbre
+ */
 const ARBRE ={
     imgD: createImg("images/arbre4.png"),
     imgM: createImg("images/arbre3.png"),
@@ -119,6 +141,9 @@ const ARBRE ={
     imgS: createImg("images/arbre1.png")
 };
 
+/**
+ * Objet contenant les images ou sont écrit les aides utilisé pendant le tutoriel
+ */
 const TutorielImages = {
     imgTournerG:createImg("images/TournerGauche.png"),
     imgTournerD:createImg("images/TournerDroite.png"),
