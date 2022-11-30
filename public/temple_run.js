@@ -179,6 +179,10 @@ function createImg(source){
 //partie tutoriel
 var tutoriel = confirm("Voulez-vous suivre le turoriel ?");
 var chemin = [ 
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
     cheminAGauche(ROAD),
     creerLigne2(ROAD1),
     creerLigne2(ROAD),
@@ -383,7 +387,6 @@ function dessinerLepiege(c,l,cell){
         route = quelleObstacleAlaLigne(l+2);
     else 
         route = quelleObstacleAlaLigne(l-2);
-    console.log(route);
     if (c == 2)
         ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
     else if (c == 3)
@@ -529,30 +532,35 @@ function draw(){
 }
 
 function afficheAideTuto(){
-    let y =0;
+    let y =1;
     obstacle = quelleObstacleAlaLigne(y);
-    while(y < 10 && (obstacle == EMPTY || obstacle == ROAD1 || obstacle == ROAD)){
+    while(y < 9 && (obstacle == EMPTY || obstacle == ROAD1 || obstacle == ROAD)){
         y+=1;
         obstacle = quelleObstacleAlaLigne(y);
     }
     switch(obstacle){
         case FEU:
+        case BRANCHE: 
+        case TROU:
             ctx.drawImage(TutorielImages.imgSauter, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
             break;
         case ARBRE:
             ctx.drawImage(TutorielImages.imgGlisser, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
             break; 
-        case TROU:
-            ctx.drawImage(TutorielImages.imgSauter, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
-           break;  
-        case BRANCHE: 
-            ctx.drawImage(TutorielImages.imgSauter, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
-            break; 
+        case -1:
         case EMPTY:
-             y=0;
-            while(WORLD[y][0] != ROAD || WORLD[y][0] != ROAD1 ){
-                ctx.drawImage(TutorielImages.imgTournerG, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
-            }   
+        case ROAD:
+            console.log("vide");
+            y=0;
+            while(y<9 &&  WORLD[y][6]!=ROAD && WORLD[y][6]!= ROAD1  && WORLD[y][0]!=ROAD && WORLD[y][0]!= ROAD1){
+                y++;
+            }
+            if( y<9){
+                if (WORLD[y][6]==ROAD || WORLD[y][6]== ROAD1 )
+                    ctx.drawImage(TutorielImages.imgTournerD, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+                else
+                    ctx.drawImage(TutorielImages.imgTournerG, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+            }
             break;   
     }
 
@@ -852,7 +860,7 @@ function AjoutLigne(){
         newLine = chemin.pop();
 
         if(newLine[6] == ROAD1 ||newLine[0] == ROAD ){
-            prochainPiege=4;
+            prochainPiege=6;
             stopRoute = 0;
         }
         if(chemin.length == 0){
