@@ -3,7 +3,7 @@ w= window.innerWidth-10;
 h=Math.floor(h/10);
 w=Math.floor(w/7);
 const SIZE = Math.min(h,w);
-const bt = document.getElementsByTagName("button")[0];
+const bt = document.getElementById('button1');
 const imagesEmpty1 = [createImg("images/empty1.png"),
 createImg("images/emptyD.png"),
 createImg("images/emptyG.png"),
@@ -302,7 +302,6 @@ bt.addEventListener('click',function(evt){
     canvas.style.left = Math.floor((largeurWin-canvas.width)/2) + 'px';
     canvas.style.position = 'fixed';
     canvas.style.display = 'block';
-    bt.style.display ='none';
     initJeu();
     jeuID = setInterval(Jeu,30);
     run = true;
@@ -688,7 +687,6 @@ function gameOver(){
     alert("Game Over - Score : "+score);
     clearInterval(jeuID);
     canvas.style.display = 'none';
-    bt.style.display = 'block';
 }
 
 function cheminADroite(r){
@@ -704,6 +702,8 @@ function cheminAGetD(r){
     
     return [r, r, r, r, r, r, r];
 }
+
+
 
 function creerLigne(){
     if (nextRoad==ROAD1) r= ROAD;
