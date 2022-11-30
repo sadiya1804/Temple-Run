@@ -88,6 +88,13 @@ imgG: createImg("images/arbre2.png"),
 imgS: createImg("images/arbre1.png")
 };
 
+const TutorielImages = {
+    imgTournerG:createImg("images/TournerGauche.png"),
+    imgTournerD:createImg("images/TournerDroite.png"),
+    imgSauter:createImg("images/Sauter.png"),
+    imgGlisser:createImg("images/Glisser.png")
+};
+
 
 let jeuID;
 
@@ -155,6 +162,49 @@ document.addEventListener('keydown', function(evt){
     evt.d
     //console.log(evt.key );
 });
+
+//partie tutoriel
+var tutoriel = confirm("Voulez-vous suivre le turoriel ?");
+var chemin = [ 
+    cheminAGauche(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    cheminADroite(ROAD1),  
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(BRANCHE),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ARBRE),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(FEU),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(ROAD1),
+    creerLigne2(ROAD),
+    creerLigne2(TROU),
+
+];
+function creerLigne2(obstacle){
+    return [EMPTY,EMPTY,obstacle,obstacle,obstacle, EMPTY, EMPTY];
+}
+
+ 
+
 
 /**{ DeBut Tactil event test*/
 console.log("Tactil actif");
@@ -464,7 +514,41 @@ function draw(){
             }
         }
     } 
+
+    if(tutoriel){
+        afficheAideTuto();
+    }
     
+}
+
+function afficheAideTuto(){
+    let y =0;
+    obstacle = quelleObstacleAlaLigne(y);
+    while(y < 10 && (obstacle == EMPTY || obstacle == ROAD1 || obstacle == ROAD)){
+        y+=1;
+        obstacle = quelleObstacleAlaLigne(y);
+    }
+    switch(obstacle){
+        case FEU:
+            ctx.drawImage(TutorielImages.imgSauter, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+            break;
+        case ARBRE:
+            ctx.drawImage(TutorielImages.imgGlisser, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+            break; 
+        case TROU:
+            ctx.drawImage(TutorielImages.imgSauter, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+           break;  
+        case BRANCHE: 
+            ctx.drawImage(TutorielImages.imgSauter, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+            break; 
+        case EMPTY:
+             y=0;
+            while(WORLD[y][0] != ROAD || WORLD[y][0] != ROAD1 ){
+                ctx.drawImage(TutorielImages.imgTournerG, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+            }   
+            break;   
+    }
+
 }
 
 function actionDroite(){
@@ -477,6 +561,7 @@ function actionDroite(){
         }
     
 }
+
     
 function changeEnvironnement(){
     posSkin.dir = 0;
@@ -739,7 +824,22 @@ function creerLigne(){
 }
 
 function AjoutLigne(){
-    newLine = creerLigne();
+    if(tutoriel==true && stopRoute !=0){
+        newLine = chemin.pop();
+
+        if(newLine[6] == ROAD1 ||newLine[0] == ROAD ){
+            prochainPiege=4;
+            stopRoute = 0;
+        }
+        if(chemin.length == 0){
+            tutoriel =false;
+        }
+    }
+    else{
+        newLine = creerLigne();
+        
+    }
+   
 
     WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x-1];
     if (WORLD[posSkin.y][posSkin.x] == EMPTY)
