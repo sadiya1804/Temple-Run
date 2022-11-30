@@ -11,26 +11,35 @@
 </head>
 <body>
 
-    <svg xmlns="http://www.w3.org/2000/svg">
-        <filter id="motion-blur-filter" filterUnits="userSpaceOnUse">
-            <feGaussianBlur stdDeviation="100 0"></feGaussianBlur>
-        </filter>
-    </svg>
-          
+    <section id="titre">
 
-   
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="motion-blur-filter" filterUnits="userSpaceOnUse">
+                <feGaussianBlur stdDeviation="100 0"></feGaussianBlur>
+            </filter>
+        </svg>
+
+        <section id = "Accueil">
+            <img src="./images/titre.gif" alt="">
+            <span class="phrase" filter-content="">Récupére l'idole si tu peux !</span>
+            <a><button id="button1" class="noselect">Jouer</button> </a>
+            <a href="Regles.html"><button id="button2"  class="noselect"><span>Voir les régles du jeu </span></button></a>
+        </section>
+        
+    </section>
+
     <canvas id="zoneJeu" width="60" height="60"></canvas>
 
-    <section>
-        <img src="./images/titre.gif" alt="">
-        <span class="phrase" filter-content="">Récupére l'idole si tu peux !</span>
-        <a><button id="button1" class="noselect">Jouer</button> </a>
-        <a href="Regles.html"><button id="button2"  class="noselect"><span>Voir les régles du jeu </span></button></a>
+    <section id ="gameOver">
+        <h2>GameOver!!</h2>
+        <p> Score  : </p>
+        <button>Rejouer</button>
+        <button id="retour">Retour</button>
     </section>
 
 
     
     <script src="assets.js"></script>
-     <script src="temple_run.js"></script>
+    <script src="temple_run.js"></script>
 </body>
 </html>

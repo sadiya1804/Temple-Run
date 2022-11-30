@@ -17,13 +17,25 @@ body{
 }
 
 
-section{
+#Accueil{
     font-size: 30px;
     display: grid;
     gap: 45px;
     text-align: center;
     height: auto;
 }
+
+#gameOver{
+	z-index: 12;
+	color: #fff;
+	display: flex;
+	background-color: rgba(0, 0, 0,0.5);
+	position: fixed;
+	display: none;
+}
+
+
+
 
 .phrase {
     position: relative;

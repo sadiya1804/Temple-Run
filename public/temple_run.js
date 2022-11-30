@@ -8,10 +8,17 @@ const SIZE = Math.min(h,w);
 const bt = document.getElementById('button1');
 
 
+const screenGameOver = document.getElementById('gameOver');
+// variable servant à stocker l'identifiant générer lors de la création de l'intervale pour le jeu
 let jeuID;
 
+// récupération du canva
 let canvas = document.getElementById('zoneJeu');
+
+// initialisation de la variable run, run représente quand le jeu tourne 
 let run = false;
+
+
 let ctx = canvas.getContext('2d');
 let prochainPiege=0;
 let nextRoad = ROAD;
@@ -249,22 +256,41 @@ function copyTouch({ identifier, pageX, pageY }) {
   return { identifier, pageX, pageY };
 }
 /**}*/
-bt.addEventListener('click',function(evt){
+
+(document.querySelector("#gameOver button")).addEventListener('click',lancerJeu);
+
+bt.addEventListener('click',lancerJeu);
+function lancerJeu(){
+    screenGameOver.style.display = "none";
+    (document.querySelector("#titre")).style.display = "none";
     var largeurWin = window.innerWidth;
     var hauteurWin = window.innerHeight;
     if (hauteurWin<canvas.height){
         canvas.style.bottom = '0px';
-    }else
+        screenGameOver.style.bottom ='0px';
+        screenGameOver.style.height = hauteurWin+'px';
+    }else{
         canvas.style.bottom = Math.floor((hauteurWin-canvas.height)/2) + 'px';
-    
+        screenGameOver.style.bottom = Math.floor((hauteurWin-canvas.height)/2) + 'px';
+        screenGameOver.style.height = canvas.height + 'px';
+    }
     canvas.style.left = Math.floor((largeurWin-canvas.width)/2) + 'px';
+    screenGameOver.style.left = Math.floor((largeurWin-canvas.width)/2) + 'px';
+    screenGameOver.style.width = canvas.width + 'px';
     canvas.style.position = 'fixed';
     canvas.style.display = 'block';
+    screenGameOver.style.height = 
     initJeu();
     jeuID = setInterval(Jeu,30);
     run = true;
 
-})
+};
+
+(document.querySelector("#retour")).addEventListener('click',function(){
+    screenGameOver.style.display = "none";
+    canvas.style.display="none";
+    (document.querySelector("#titre")).style.display = "block";
+});
 
 
 function quelleObstacleAlaLigne(posY){    
@@ -681,9 +707,9 @@ function gameOver(){
     console.log("Game Over");
     console.log("Score : "+score);
     run = false;
-    alert("Game Over - Score : "+score);
     clearInterval(jeuID);
-    canvas.style.display = 'none';
+    screenGameOver.style.display = 'block';
+    (document.querySelector("#gameOver p")).textContent = "Score : "+score;
 }
 
 function cheminADroite(r){
