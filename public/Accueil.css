@@ -1,8 +1,4 @@
-/*canvas{
-    border: 5px solid #BADA55;
-}*/
-
-  * {
+* {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -248,7 +244,7 @@ button:focus {
     position:absolute;
     text-align: center;
     top:630px; 
-    width:1560px; 
+    width: 100vw; 
     z-index:2;
     font-size:200%;
 }
@@ -270,10 +266,9 @@ button:focus {
 
 #rêgleJeu section{
     position:absolute;
-    text-align: left;
-    top:100px; 
-    right: 50px;
-    left: 550px;
+    text-align: justify;
+    top:100px;
+    left: calc(50vw - 225px);
     width:450px; 
     z-index:2;
     font-size: 20px;
