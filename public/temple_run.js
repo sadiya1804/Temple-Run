@@ -7,6 +7,7 @@ const SIZE = Math.min(h,w);
 // On récupère le bouton qui permet de lancer le jeu
 const bt = document.getElementById('button1');
 
+const imageTuto = document.getElementById('aideTuto');
 
 const screenGameOver = document.getElementById('gameOver');
 // variable servant à stocker l'identifiant générer lors de la création de l'intervale pour le jeu
@@ -274,6 +275,12 @@ function lancerJeu(){
     (document.querySelector("#titre")).style.display = "none";
     var largeurWin = window.innerWidth;
     var hauteurWin = window.innerHeight;
+    if (tutoriel){
+        imageTuto.style.display= "block";
+        imageTuto.style.left =  Math.floor((largeurWin-canvas.width)/2) + 'px';
+        imageTuto.style.height= Math.floor(SIZE*3) + 'px';
+        imageTuto.style.width=canvas.width+"px";
+        }
     if (hauteurWin<canvas.height){
         canvas.style.bottom = '0px';
         screenGameOver.style.bottom ='0px';
@@ -478,14 +485,22 @@ function afficheAideTuto(){
         posY+=1;
         obstacle = quelleObstacleAlaLigne(posY);
     }
+    tab = imageTuto.src.split('/');
+    source = tab[tab.length-2]+'/'+tab[tab.length-1];
     switch(obstacle){
         case FEU:
         case BRANCHE: 
         case TROU:
-            ctx.drawImage(TutorielImages.imgSauter, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+            imageTuto.style.display="block";
+            if (source!=TutorielImages.imgSauter)
+                imageTuto.src = TutorielImages.imgSauter;
+            console.log(source,TutorielImages.imgSauter);
             break;
         case ARBRE:
-            ctx.drawImage(TutorielImages.imgGlisser, 0,0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+            imageTuto.style.display="block";
+            if (source!=TutorielImages.imgGlisser){
+                imageTuto.src = TutorielImages.imgGlisser;
+                console.log("change saut");}
             break; 
         case -1:
         case EMPTY:
@@ -496,12 +511,21 @@ function afficheAideTuto(){
                 posY++;
             }
             if( posY<9){
-                if (WORLD[posY][6]==ROAD || WORLD[posY][6]== ROAD1 )
-                    ctx.drawImage(TutorielImages.imgTournerD, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
-                else
-                    ctx.drawImage(TutorielImages.imgTournerG, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
+                imageTuto.style.display="block";
+                if (WORLD[posY][6]==ROAD || WORLD[posY][6]== ROAD1 ){
+                    if (source!=TutorielImages.imgTournerD)
+                        imageTuto.src = TutorielImages.imgTournerD;
+                }else{
+                    if (source!=TutorielImages.imgTournerG)
+                        imageTuto.src = TutorielImages.imgTournerG;
+                }
+            }else
+            {
+                imageTuto.style.display="none";
             }
-            break;   
+            break;
+        default:
+            imageTuto.style.display="none";
     }
 
 }
