@@ -12,7 +12,6 @@ body{
     background-size: auto;
 }
 
-
 img{
     display: block;
     margin: auto;
@@ -33,7 +32,7 @@ ul{
     right: 30px;
     left: 300px;
     font-weight: 600;
-    line-height: 35px;
+    line-height: 45px;
 }
 li{
     text-align: left;
@@ -63,7 +62,7 @@ section{
         height: 100vh;
     }
     section{
-        line-height: 20px;
+        line-height: 30px;
         top:130px; 
         right: auto;
         left:90px;
@@ -78,7 +77,6 @@ section{
         font-size:200%;
     }
     ul{
-
         text-align: left;
         width:300px; 
         right: 30px;
@@ -86,6 +84,7 @@ section{
         font-weight: 600;
     }
     li{
+        
         text-align: left;
         left: 100pxs;
         font-weight: 100;
