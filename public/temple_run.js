@@ -2,98 +2,10 @@ h = window.innerHeight -10;
 w= window.innerWidth-10;
 h=Math.floor(h/10);
 w=Math.floor(w/7);
+// On définit la taille de la des cases du Cannevas en fonction de la taille de la fenêtre
 const SIZE = Math.min(h,w);
+// On récupère le bouton qui permet de lancer le jeu
 const bt = document.getElementById('button1');
-const imagesEmpty1 = [createImg("images/empty1.png"),
-createImg("images/emptyD.png"),
-createImg("images/emptyG.png"),
-createImg("images/emptyCoinHD.png"),
-createImg("images/emptyCoinHG.png"),
-createImg("images/emptyB.png"),
-createImg("images/emptyH.png")];
-const imagesEmpty2 = [createImg("images/empty2.png"),
-createImg("images/empty2D.png"),
-createImg("images/empty2G.png"),
-createImg("images/empty2HD.png"),
-createImg("images/empty2HG.png"),
-createImg("images/empty2B.png"),
-createImg("images/empty2H.png")];
-var EMPTY = {c: "#588157",
-n:"empty",
-img:imagesEmpty1[0],
-imgD:imagesEmpty1[1],
-imgG:imagesEmpty1[2],
-imgCD:imagesEmpty1[3],
-imgCG:imagesEmpty1[4],
-imgB:imagesEmpty1[5],
-imgH:imagesEmpty1[6]
-} ;
-const ROAD = {c:"#895737",
-    n:"road",
-    imgD: createImg("images/S3.png"),
-    imgM: createImg("images/S2.png"),
-    imgG: createImg("images/S1.png"),
-    imgS: createImg("images/S7.png")
-};
-const ROAD1 = {c:"#704b34",
-    n:"road1",
-    imgD: createImg("images/S6.png"),
-    imgM: createImg("images/S5.png"),
-    imgG: createImg("images/S4.png"),
-    imgS: createImg("images/S7.png")
-};
-const PLAYER = {c:"#F77F00",n:'skin',
-    img: createImg("images/p2.png")};
-
-const imagePlayer = {
-    img1:createImg("images/p1.png"),
-    img2:createImg("images/p2.png"),
-    imgD1:createImg("images/pD1.png"),
-    imgD2:createImg("images/pD2.png"),
-    imgG1:createImg("images/pG1.png"),
-    imgG2:createImg("images/pG2.png"),
-    imgUp:createImg("images/pUP.png"),
-    imgDown:createImg("images/pDown.png"),
-}
-
-const FEU = {c:"#f74222",n:"feu",
-    imgDD: createImg("images/Feu4.png"),
-    imgD: createImg("images/Feu3.png"),
-    imgM: createImg("images/Feu2.png"),
-    imgG: createImg("images/Feu1.png"),
-    imgGG: createImg("images/Feu0.png")
-};
-const BRANCHE = {c:"#605952",n:"branche",
-    imgDD: createImg("images/branche5.png"),
-    imgD: createImg("images/branche4.png"),
-    imgM:createImg("images/branche3.png"),
-    imgG:createImg("images/branche2.png"),
-    imgGG:createImg("images/branche1.png")};
-const imagesTrou = {imgD: createImg("images/trou3.png"),
-    imgM: createImg("images/trou2.png"),
-    imgG: createImg("images/trou1.png"),
-    imgD1: createImg("images/2trou3.png"),
-    imgM1: createImg("images/2trou2.png"),
-    imgG1: createImg("images/2trou1.png")}
-
-const TROU = {c:"#000000",n:"trou",
-    imgD: imagesTrou.imgD,
-    imgM: imagesTrou.imgM,
-    imgG: imagesTrou.imgG,};
-
-const ARBRE ={c:"#0008ff",n:"arbre",
-imgD: createImg("images/arbre4.png"),
-imgM: createImg("images/arbre3.png"),
-imgG: createImg("images/arbre2.png"),
-imgS: createImg("images/arbre1.png")
-};
-
-const TutorielImages = {
-    imgTournerG:createImg("images/TournerGauche.png"),
-    imgTournerD:createImg("images/TournerDroite.png"),
-    imgSauter:createImg("images/Sauter.png"),
-    imgGlisser:createImg("images/Glisser.png")
-};
 
 
 let jeuID;
@@ -115,12 +27,12 @@ let difficulté = {
 ctx.strokeStyle = "red";
 ctx.fillStyle = "#00FF00";
 
-let posSkin = {
-    x: 3,
-    y: 1,
+let player  = {
+    posX: 3,
+    posY: 1,
     saut:0,
     glisse:0,
-    dir:0
+    direction:0
 };
 let score = 0;
 
@@ -144,12 +56,12 @@ document.addEventListener('keydown', function(evt){
     if (run){
         evt.preventDefault();
         if (evt.key == 'ArrowLeft'){
-            posSkin.dir = +2;
+            player .direction = +2;
             actionGauche();
             basculerAgauche();
         }
         if (evt.key == 'ArrowRight'){
-            posSkin.dir = -2;
+            player .direction = -2;
             actionDroite();
             basculerAdroite();
         }
@@ -166,15 +78,7 @@ document.addEventListener('keydown', function(evt){
 });
 
 
-/**  Cette fonction retourne un element HtMl avec pour source l'argument
- * 
- * @param 
-*/
-function createImg(source){
-    let image = new Image();
-    image.src = source;
-    return image;
-}
+
 
 //partie tutoriel
 var tutoriel = confirm("Voulez-vous suivre le turoriel ?");
@@ -256,12 +160,12 @@ function handleEnd(evt) {
       if (Math.abs(diffX)>=Math.abs(diffY)){
         if (diffX>0){
           console.log("glisse_Droite");
-          posSkin.dir = -2;
+          player .direction = -2;
           actionDroite();
         }
         else{
           console.log("glisse_Gauche");
-          posSkin.dir = +2;
+          player .direction = +2;
           actionGauche();
         }
       }else{
@@ -296,12 +200,12 @@ function handleMoove(evt) {
         if (Math.abs(diffX)>=Math.abs(diffY)){
           if (diffX>0){
             console.log("glisse_Droite");
-            posSkin.dir = -2;
+            player .direction = -2;
             actionDroite();
           }
           else{
             console.log("glisse_Gauche");
-            posSkin.dir = +2;
+            player .direction = +2;
             actionGauche();
           }
         }else{
@@ -363,21 +267,21 @@ bt.addEventListener('click',function(evt){
 })
 
 
-function quelleObstacleAlaLigne(y){    
-    switch(posSkin.x){
+function quelleObstacleAlaLigne(posY){    
+    switch(player .posX){
         case 2:
         case 3:
-            x=4;
+            posX=4;
             break;
         case 4:
-            x=2;
+            posX=2;
             break;
         default:
-            x=-1;
+            posX=-1;
     }
-    if (y<0||x<0||y>9)
+    if (posY<0||posX<0||posY>9)
         return -1;
-    return WORLD[y][x];
+    return WORLD[posY][posX];
 }
 
 function dessinerLepiege(c,l,cell){
@@ -393,7 +297,7 @@ function dessinerLepiege(c,l,cell){
         ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
     else 
         ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
-    if (posSkin.y == l && posSkin.x == c && posSkin.glisse>0 && (cell==ARBRE || cell==FEU)){
+    if (player .posY == l && player .posX == c && player .glisse>0 && (cell==ARBRE || cell==FEU)){
         ctx.drawImage(PLAYER.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
     }
     if (c == 2)
@@ -532,11 +436,11 @@ function draw(){
 }
 
 function afficheAideTuto(){
-    let y =1;
-    obstacle = quelleObstacleAlaLigne(y);
-    while(y < 9 && (obstacle == EMPTY || obstacle == ROAD1 || obstacle == ROAD)){
-        y+=1;
-        obstacle = quelleObstacleAlaLigne(y);
+    let posY =1;
+    obstacle = quelleObstacleAlaLigne(posY);
+    while(posY < 9 && (obstacle == EMPTY || obstacle == ROAD1 || obstacle == ROAD)){
+        posY+=1;
+        obstacle = quelleObstacleAlaLigne(posY);
     }
     switch(obstacle){
         case FEU:
@@ -551,12 +455,12 @@ function afficheAideTuto(){
         case EMPTY:
         case ROAD:
             console.log("vide");
-            y=0;
-            while(y<9 &&  WORLD[y][6]!=ROAD && WORLD[y][6]!= ROAD1  && WORLD[y][0]!=ROAD && WORLD[y][0]!= ROAD1){
-                y++;
+            posY=0;
+            while(posY<9 &&  WORLD[posY][6]!=ROAD && WORLD[posY][6]!= ROAD1  && WORLD[posY][0]!=ROAD && WORLD[posY][0]!= ROAD1){
+                posY++;
             }
-            if( y<9){
-                if (WORLD[y][6]==ROAD || WORLD[y][6]== ROAD1 )
+            if( posY<9){
+                if (WORLD[posY][6]==ROAD || WORLD[posY][6]== ROAD1 )
                     ctx.drawImage(TutorielImages.imgTournerD, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
                 else
                     ctx.drawImage(TutorielImages.imgTournerG, 0, 0,SIZE*7,Math.floor(((SIZE*7)/312)*130));
@@ -568,7 +472,7 @@ function afficheAideTuto(){
 
 function actionDroite(){
     console.log("Droite");
-        if ((WORLD[posSkin.y][5] == ROAD || WORLD[posSkin.y][5] == ROAD1)&&run){  
+        if ((WORLD[player .posY][5] == ROAD || WORLD[player .posY][5] == ROAD1)&&run){  
             run=false;
             pause = 30 * difficulté.saut;
             setTimeout(allerAdroite,pause,0)
@@ -579,10 +483,10 @@ function actionDroite(){
 
     
 function changeEnvironnement(){
-    posSkin.dir = 0;
-    posSkin.x = 3;
+    player .direction = 0;
+    player .posX = 3;
     stopRoute = -1;
-    posSkin.y= 1;
+    player .posY= 1;
     if (Math.floor(Math.random()*100)%4==0){
         if (EMPTY.c == "#588157"){
             EMPTY.c = "#444b66";
@@ -624,16 +528,16 @@ function changeEnvironnement(){
 }
 
 function allerAdroite(){
-    if (posSkin.x == 6){
+    if (player .posX == 6){
         changeEnvironnement();
         PLAYER.img = imagePlayer.img1;
         draw();
         run =true;
     }
     else{
-        WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x+1];
-        posSkin.x+=1;
-        WORLD[posSkin.y][posSkin.x] = PLAYER;
+        WORLD[player .posY][player .posX] = WORLD[player .posY][player .posX+1];
+        player .posX+=1;
+        WORLD[player .posY][player .posX] = PLAYER;
         if (PLAYER.img == imagePlayer.imgD1)
             PLAYER.img = imagePlayer.imgD2;
         else
@@ -646,42 +550,42 @@ function allerAdroite(){
 
 
 function basculerAdroite(){
-    if (posSkin.x<4 && ( WORLD[posSkin.y][posSkin.x+1] == ROAD || WORLD[posSkin.y][posSkin.x+1] == ROAD1) && run){
-        WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x+1];
-        posSkin.x+=1;
-        WORLD[posSkin.y][posSkin.x]=PLAYER;
+    if (player .posX<4 && ( WORLD[player .posY][player .posX+1] == ROAD || WORLD[player .posY][player .posX+1] == ROAD1) && run){
+        WORLD[player .posY][player .posX]=WORLD[player .posY][player .posX+1];
+        player .posX+=1;
+        WORLD[player .posY][player .posX]=PLAYER;
         draw();
     }
 }
 
 function basculerAgauche(){
-    if (posSkin.x>2 && (WORLD[posSkin.y][posSkin.x-1] == ROAD || WORLD[posSkin.y][posSkin.x-1] == ROAD1) && run){
-        WORLD[posSkin.y][posSkin.x]=WORLD[posSkin.y][posSkin.x-1];
-        posSkin.x-=1;
-        WORLD[posSkin.y][posSkin.x]=PLAYER;
+    if (player .posX>2 && (WORLD[player .posY][player .posX-1] == ROAD || WORLD[player .posY][player .posX-1] == ROAD1) && run){
+        WORLD[player .posY][player .posX]=WORLD[player .posY][player .posX-1];
+        player .posX-=1;
+        WORLD[player .posY][player .posX]=PLAYER;
         draw();
     }
 }
 
 function actionGauche(){
     console.log("Gauche");
-        if ((WORLD[posSkin.y][1] == ROAD || WORLD[posSkin.y][1] == ROAD1)&&run){
+        if ((WORLD[player .posY][1] == ROAD || WORLD[player .posY][1] == ROAD1)&&run){
             run=false;
             pause = 30 * difficulté.saut;
             setTimeout(allerAgauche,pause,0)
         }
 }
 function allerAgauche(){
-    if (posSkin.x == 0){
+    if (player .posX == 0){
         changeEnvironnement();
         PLAYER.img = imagePlayer.img1;
         draw();
         run =true;
     }
     else{
-        WORLD[posSkin.y][posSkin.x] = WORLD[posSkin.y][posSkin.x-1];
-        posSkin.x-=1;
-        WORLD[posSkin.y][posSkin.x] = PLAYER;
+        WORLD[player .posY][player .posX] = WORLD[player .posY][player .posX-1];
+        player .posX-=1;
+        WORLD[player .posY][player .posX] = PLAYER;
         
         if (PLAYER.img == imagePlayer.imgG1)
             PLAYER.img = imagePlayer.imgG2;
@@ -716,12 +620,12 @@ function initJeu(){
         tour:5,
         boucle:0
     }
-    posSkin = {
-        x: 3,
-        y: 1,
+    player  = {
+        posX: 3,
+        posY: 1,
         saut:0,
         glisse:0,
-        dir:0
+        direction:0
     };
 
 
@@ -729,9 +633,9 @@ function initJeu(){
 
 function sauter(){
     console.log("Saut");
-    if (posSkin.saut<-1){
-        posSkin.glisse=-1;
-        posSkin.saut=2;
+    if (player .saut<-1){
+        player .glisse=-1;
+        player .saut=2;
         PLAYER.img = imagePlayer.imgUp;
     }
 
@@ -739,28 +643,28 @@ function sauter(){
 
 function glisser(){
     console.log("Glisse");
-    if (posSkin.glisse<-1){
-        posSkin.saut=-1;
-        posSkin.glisse=2;
+    if (player .glisse<-1){
+        player .saut=-1;
+        player .glisse=2;
         PLAYER.img = imagePlayer.imgDown;
     }
 }
 
 function colision(){
-    switch(WORLD[posSkin.y][posSkin.x]){
+    switch(WORLD[player .posY][player .posX]){
         case FEU : 
-            if (posSkin.saut >0 || posSkin.glisse>0){
+            if (player .saut >0 || player .glisse>0){
                 return false;
             }else
             return true
         case BRANCHE :
         case TROU :
-            if ((posSkin.saut >0)){
+            if ((player .saut >0)){
                 return false;
             }else
                 return true;
         case ARBRE :
-            if ((posSkin.glisse >0)){
+            if ((player .glisse >0)){
                 return false;
             }else
                 return true
@@ -870,9 +774,9 @@ function AjoutLigne(){
     else{
         newLine = creerLigne();
     }
-    WORLD[posSkin.y][posSkin.x]=quelleObstacleAlaLigne(posSkin.y);
-    if (WORLD[posSkin.y][posSkin.x] == EMPTY)
-        WORLD[posSkin.y][posSkin.x]  = (nextRoad==ROAD)?ROAD:ROAD1;
+    WORLD[player .posY][player .posX]=quelleObstacleAlaLigne(player .posY);
+    if (WORLD[player .posY][player .posX] == EMPTY)
+        WORLD[player .posY][player .posX]  = (nextRoad==ROAD)?ROAD:ROAD1;
 
     for (l=0;l<WORLD.length-1;l++){
             WORLD[l]=WORLD[l+1];
@@ -887,23 +791,23 @@ function AjoutLigne(){
         gameOver();
     }else{
         
-        if (!((WORLD[posSkin.y][posSkin.x]==FEU && posSkin.glisse>0) || WORLD[posSkin.y][posSkin.x]==ARBRE)){
-            WORLD[posSkin.y][posSkin.x]=PLAYER;
-            if (!(posSkin.glisse>0 || posSkin.saut>0))
+        if (!((WORLD[player .posY][player .posX]==FEU && player .glisse>0) || WORLD[player .posY][player .posX]==ARBRE)){
+            WORLD[player .posY][player .posX]=PLAYER;
+            if (!(player .glisse>0 || player .saut>0))
                 if (PLAYER.img == imagePlayer.img1)
                     PLAYER.img = imagePlayer.img2;
                 else
                     PLAYER.img = imagePlayer.img1;
             
         }
-        if (posSkin.dir>0){
+        if (player .direction>0){
             actionGauche();
-            posSkin.dir--;}
-        if (posSkin.dir<0){
+            player .direction--;}
+        if (player .direction<0){
             actionDroite();
-            posSkin.dir++;}
-        posSkin.glisse--;
-        posSkin.saut--;
+            player .direction++;}
+        player .glisse--;
+        player .saut--;
 
         draw();
     }
