@@ -33,7 +33,7 @@ ul{
     right: 30px;
     left: 300px;
     font-weight: 600;
-
+    line-height: 35px;
 }
 li{
     text-align: left;
@@ -72,12 +72,13 @@ section{
     }
 
     div{
-        top:590px; 
+        top:715px; 
         width:517px; 
         z-index:2;
         font-size:200%;
     }
     ul{
+
         text-align: left;
         width:300px; 
         right: 30px;
