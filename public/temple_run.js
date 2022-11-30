@@ -265,6 +265,7 @@ function copyTouch({ identifier, pageX, pageY }) {
     (document.querySelector("#titre")).style.display = "none";
     screenGameOver.style.display = "none";
     canvas.style.display = "none";
+    imageTuto.style.display = "none";
     (document.querySelector("#rêgleJeu")).style.display = "block";
 
 });
@@ -306,6 +307,7 @@ function lancerJeu(){
     (document.querySelector("#rêgleJeu")).style.display = "none";
     screenGameOver.style.display = "none";
     canvas.style.display="none";
+    imageTuto.style.display = "none";
     (document.querySelector("#titre")).style.display = "block";
 });
 
@@ -494,18 +496,15 @@ function afficheAideTuto(){
             imageTuto.style.display="block";
             if (source!=TutorielImages.imgSauter)
                 imageTuto.src = TutorielImages.imgSauter;
-            console.log(source,TutorielImages.imgSauter);
             break;
         case ARBRE:
             imageTuto.style.display="block";
-            if (source!=TutorielImages.imgGlisser){
+            if (source!=TutorielImages.imgGlisser)
                 imageTuto.src = TutorielImages.imgGlisser;
-                console.log("change saut");}
             break; 
         case -1:
         case EMPTY:
         case ROAD:
-            console.log("vide");
             posY=0;
             while(posY<9 &&  WORLD[posY][6]!=ROAD && WORLD[posY][6]!= ROAD1  && WORLD[posY][0]!=ROAD && WORLD[posY][0]!= ROAD1){
                 posY++;

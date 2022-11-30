@@ -92,6 +92,41 @@ img{
         font-size: 22px;
     }
 
+       
+
+    #rêgleJeu img{
+        width: 400px;
+        height: 100vh;
+    }
+    #rêgleJeu section{
+        line-height: 20px;
+        top:130px; 
+        right: auto;
+        left:90px;
+        width:350px; 
+        font-size: 15px;
+    }
+
+    #rêgleJeu div{
+        top:715px; 
+        width:517px; 
+        z-index:2;
+        font-size:200%;
+    }
+    #rêgleJeu ul{
+
+        text-align: left;
+        width:300px; 
+        right: 30px;
+        left: 50px;
+        font-weight: 600;
+    }
+    #rêgleJeu li{
+        text-align: left;
+        left: 100pxs;
+        font-weight: 100;
+    }
+
 }
 canvas {
 	display: none;
@@ -144,17 +179,6 @@ canvas {
 	animation: spin 1s infinite linear;
 }
 
-@keyframes spin{
-	25%{transform: translateX(-25px) translateY(-35px);
-			width: 15px;
-			height: 15px;}
-	50% {transform: translateX(-55px) translateY(-30px);
-			width: 5px;
-			height: 5px;}
-	75% {transform: translateX(-85px) translateY(-35px);
-			width: 15px;
-			height: 15px;}
-}
 
 
 
@@ -256,44 +280,6 @@ button:focus {
 }
 
 
-@media screen and (max-width: 750px) {
-   
-
-    #rêgleJeu img{
-        width: 400px;
-        height: 100vh;
-    }
-    #rêgleJeu section{
-        line-height: 20px;
-        top:130px; 
-        right: auto;
-        left:90px;
-        width:350px; 
-        font-size: 15px;
-    }
-
-    #rêgleJeu div{
-        top:715px; 
-        width:517px; 
-        z-index:2;
-        font-size:200%;
-    }
-    #rêgleJeu ul{
-
-        text-align: left;
-        width:300px; 
-        right: 30px;
-        left: 50px;
-        font-weight: 600;
-    }
-    #rêgleJeu li{
-        text-align: left;
-        left: 100pxs;
-        font-weight: 100;
-    }
-    
-}
-
 #rêgleJeu .noselect {
     -webkit-touch-callout: none;
       -webkit-user-select: none;
@@ -340,3 +326,14 @@ button:focus {
       animation: spin 1s infinite linear;
   }
   
+  @keyframes spin{
+	25%{transform: translateX(-25px) translateY(-35px);
+			width: 15px;
+			height: 15px;}
+	50% {transform: translateX(-55px) translateY(-30px);
+			width: 5px;
+			height: 5px;}
+	75% {transform: translateX(-85px) translateY(-35px);
+			width: 15px;
+			height: 15px;}
+}
