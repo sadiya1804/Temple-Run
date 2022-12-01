@@ -24,9 +24,10 @@ body{
 #Accueil{
     font-size: 30px;
     display: grid;
-    gap: 45px;
+    gap: 30px;
     text-align: center;
-    height: auto;
+    justify-content: center;
+    height: 100vh;
 }
 
 #gameOver{
@@ -36,6 +37,14 @@ body{
 	background-color: rgba(0, 0, 0,0.5);
 	position: fixed;
 	display: none;
+/*
+    font-size: 30px;
+    display: grid;
+    gap: 45px;
+    text-align: center;
+    justify-content: center;
+    height: auto;
+    line-height: 100px;*/
 }
 
 
@@ -73,7 +82,9 @@ img{
 }
 
 @media screen and (max-width: 750px) {
-
+    #Accueil{
+        gap: 90px;
+    }
    
     img{
         display: block;
@@ -87,41 +98,49 @@ img{
         font-weight: 850;
         font-size: 22px;
     }
-
-       
-
-    #rêgleJeu img{
-        width: 400px;
-        height: 100vh;
+    #rêgleJeu {
+        position: fixed;
     }
-    #rêgleJeu section{
-        line-height: 20px;
-        top:130px; 
-        right: auto;
-        left:90px;
-        width:350px; 
-        font-size: 15px;
+  
+    
+    #rêgleJeu img{
+        min-width:100vw;
+        min-height:100vh;
+    }
+
+    #rêgleJeu section p{
+        line-height: 35px;
+        padding-top:90px; 
+        left:200px;
+        width:460px; 
+        font-size: 25px;
+        min-height: 200px;
+        
     }
 
     #rêgleJeu div{
-        top:715px; 
-        width:517px; 
+        margin-top:520px; 
+        width:520px; 
         z-index:2;
-        font-size:200%;
+        font-size:100px;
+        font-weight: 600;
     }
     #rêgleJeu ul{
-
         text-align: left;
-        width:300px; 
+        width:auto; 
         right: 30px;
         left: 50px;
         font-weight: 600;
     }
     #rêgleJeu li{
         text-align: left;
-        left: 100pxs;
+        margin-left:20px;
         font-weight: 100;
+        line-height:50px;
+
     }
+    
+
 
 }
 canvas {
@@ -272,6 +291,7 @@ button:focus {
     width:450px; 
     z-index:2;
     font-size: 20px;
+
 }
 
 
@@ -332,3 +352,4 @@ button:focus {
 			width: 15px;
 			height: 15px;}
 }
+
