@@ -22,7 +22,6 @@ function calculeTailleCaseCanvas(){
     h=Math.floor(h/10);
     w=Math.floor(w/7);
 
-    console.log(h,w,Math.min(h,w));
     return Math.min(h,w);
 }
 
@@ -152,7 +151,6 @@ let ongoingTouche = null;
 
 function handleStart(evt) {
     evt.preventDefault();
-    console.log('touchstart.');
     const touches = evt.changedTouches;
     if (ongoingTouche == null){
         ongoingTouche = copyTouch(touches[0]);
@@ -161,8 +159,6 @@ function handleStart(evt) {
 
 function handleEnd(evt) {
   evt.preventDefault();
-  console.log('touchEnd.');
-
   const touches = evt.changedTouches;
     
   for (let i = 0; i < touches.length; i++) {
@@ -201,7 +197,6 @@ function handleEnd(evt) {
 
 function handleMoove(evt) {
     evt.preventDefault();
-    console.log('touchEnd.');
   
     const touches = evt.changedTouches;
       
@@ -240,7 +235,6 @@ function handleMoove(evt) {
 
 function handleCancel(evt){
   evt.preventDefault();
-  console.log('touchcancel.');
 
   const touches = evt.changedTouches;
     
