@@ -1,9 +1,6 @@
-h = window.innerHeight -10;
-w= window.innerWidth-10;
-h=Math.floor(h/10);
-w=Math.floor(w/7);
+
 // On définit la taille de la des cases du Cannevas en fonction de la taille de la fenêtre
-const SIZE = Math.min(h,w);
+let size = calculeTailleCaseCanvas();
 // On récupère le bouton qui permet de lancer le jeu
 const bt = document.getElementById('button1');
 
@@ -19,6 +16,15 @@ let canvas = document.getElementById('zoneJeu');
 // initialisation de la variable run, run représente quand le jeu tourne 
 let run = false;
 
+function calculeTailleCaseCanvas(){
+    h = window.innerHeight -10;
+    w= window.innerWidth-10;
+    h=Math.floor(h/10);
+    w=Math.floor(w/7);
+
+    console.log(h,w,Math.min(h,w));
+    return Math.min(h,w);
+}
 
 let ctx = canvas.getContext('2d');
 let prochainPiege=0;
@@ -57,8 +63,8 @@ let WORLD = [
     [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY]
   ];
 
-canvas.height = WORLD.length*SIZE;
-canvas.width = WORLD[0].length*SIZE;
+canvas.height = WORLD.length*size;
+canvas.width = WORLD[0].length*size;
 
 document.addEventListener('keydown', function(evt){
     if (run){
@@ -270,16 +276,20 @@ function copyTouch({ identifier, pageX, pageY }) {
 
 });
 bt.addEventListener('click',lancerJeu);
+
 function lancerJeu(){
     screenGameOver.style.display = "none";
     (document.querySelector("#rêgleJeu")).style.display = "none";
     (document.querySelector("#titre")).style.display = "none";
+    size = calculeTailleCaseCanvas();
+    canvas.height = WORLD.length*size;
+    canvas.width = WORLD[0].length*size;
     var largeurWin = window.innerWidth;
     var hauteurWin = window.innerHeight;
     if (tutoriel){
         imageTuto.style.display= "block";
         imageTuto.style.left =  Math.floor((largeurWin-canvas.width)/2) + 'px';
-        imageTuto.style.height= Math.floor(SIZE*3) + 'px';
+        imageTuto.style.height= Math.floor(size*3) + 'px';
         imageTuto.style.width=canvas.width+"px";
         }
     if (hauteurWin<canvas.height){
@@ -331,26 +341,26 @@ function quelleObstacleAlaLigne(posY){
 
 function dessinerLepiege(c,l,cell){
     if (c<2 || c>4)
-        return ctx.drawImage(ROAD.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        return ctx.drawImage(ROAD.imgS,size*c,size*(WORLD.length-l-1),size,size);
     if (l+2<WORLD.length)
         route = quelleObstacleAlaLigne(l+2);
     else 
         route = quelleObstacleAlaLigne(l-2);
     if (c == 2)
-        ctx.drawImage(route.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(route.imgG,size*c,size*(WORLD.length-l-1),size,size);
     else if (c == 3)
-        ctx.drawImage(route.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(route.imgM,size*c,size*(WORLD.length-l-1),size,size);
     else 
-        ctx.drawImage(route.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(route.imgD,size*c,size*(WORLD.length-l-1),size,size);
     if (player .posY == l && player .posX == c && player .glisse>0 && (cell==ARBRE || cell==FEU)){
-        ctx.drawImage(PLAYER.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(PLAYER.img,size*c,size*(WORLD.length-l-1),size,size);
     }
     if (c == 2)
-        ctx.drawImage(cell.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(cell.imgG,size*c,size*(WORLD.length-l-1),size,size);
     else if (c == 3)
-        ctx.drawImage(cell.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(cell.imgM,size*c,size*(WORLD.length-l-1),size,size);
     else 
-        ctx.drawImage(cell.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+        ctx.drawImage(cell.imgD,size*c,size*(WORLD.length-l-1),size,size);
     
 }
 
@@ -367,70 +377,70 @@ function draw(){
                 case ROAD:
                 case ROAD1:
                     if (c == 2){
-                        ctx.drawImage(cell.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgG,size*c,size*(WORLD.length-l-1),size,size);
                         if (quelleObstacleAlaLigne(l-1)==ARBRE){
-                            ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);}}
+                            ctx.drawImage(ARBRE.imgS,size*c,size*(WORLD.length-l-1),size,size);}}
                     else if (c == 4)
-                        ctx.drawImage(cell.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgD,size*c,size*(WORLD.length-l-1),size,size);
                     else if (c == 3)
-                        ctx.drawImage(cell.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgM,size*c,size*(WORLD.length-l-1),size,size);
                     else 
-                        ctx.drawImage(cell.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(cell.imgS,size*c,size*(WORLD.length-l-1),size,size);
                     break;
 
                 case EMPTY:
                     if (c == 1 && WORLD[l][2]!=EMPTY){
                         
                         if (l+1<WORLD.length &&(WORLD[l+1][c] !=EMPTY))
-                            ctx.drawImage(EMPTY.imgCD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgCD,size*c,size*(WORLD.length-l-1),size,size);
                         else
-                            ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgG,size*c,size*(WORLD.length-l-1),size,size);
                         
 
                         if (quelleObstacleAlaLigne(l)==BRANCHE)
-                            ctx.drawImage(BRANCHE.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(BRANCHE.imgGG,size*c,size*(WORLD.length-l-1),size,size);
                         
                         if (quelleObstacleAlaLigne(l)==FEU)
-                            ctx.drawImage(FEU.imgGG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(FEU.imgGG,size*c,size*(WORLD.length-l-1),size,size);
                         }
                     else if (c == 5 && WORLD[l][4]!=EMPTY){
                         if (l+1<WORLD.length &&(WORLD[l+1][c]!=EMPTY))
-                            ctx.drawImage(EMPTY.imgCG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgCG,size*c,size*(WORLD.length-l-1),size,size);
                         else
-                            ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgD,size*c,size*(WORLD.length-l-1),size,size);
                         if (quelleObstacleAlaLigne(l)==BRANCHE)
-                            ctx.drawImage(BRANCHE.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(BRANCHE.imgDD,size*c,size*(WORLD.length-l-1),size,size);
                         
                         if (quelleObstacleAlaLigne(l)==FEU)
-                            ctx.drawImage(FEU.imgDD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(FEU.imgDD,size*c,size*(WORLD.length-l-1),size,size);
                     } 
                     else if (c==2){
                         if ( l+1<WORLD.length && WORLD[l+1][c]!=EMPTY)   
-                            ctx.drawImage(EMPTY.imgCD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgCD,size*c,size*(WORLD.length-l-1),size,size);
                         else if(WORLD[l][3]!=EMPTY)
-                            ctx.drawImage(EMPTY.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgG,size*c,size*(WORLD.length-l-1),size,size);
                         else if (l>0 && WORLD[l-1][c]!=EMPTY)
-                            ctx.drawImage(EMPTY.imgB,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgB,size*c,size*(WORLD.length-l-1),size,size);
                         else 
-                            ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.img,size*c,size*(WORLD.length-l-1),size,size);
                     }
                     else if (c==4) {  
                         if (l+1<WORLD.length && WORLD[l+1][c]!=EMPTY)
-                            ctx.drawImage(EMPTY.imgCG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgCG,size*c,size*(WORLD.length-l-1),size,size);
                         else if(WORLD[l][3]!=EMPTY)
-                            ctx.drawImage(EMPTY.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgD,size*c,size*(WORLD.length-l-1),size,size);
                         else if (l>0 && WORLD[l-1][c]!=EMPTY)
-                            ctx.drawImage(EMPTY.imgB,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.imgB,size*c,size*(WORLD.length-l-1),size,size);
                         else 
-                            ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                            ctx.drawImage(EMPTY.img,size*c,size*(WORLD.length-l-1),size,size);
                     }
                     else if ((c==0 || c==6) && l+1<WORLD.length && WORLD[l+1][c]!=EMPTY){
-                        ctx.drawImage(EMPTY.imgH,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(EMPTY.imgH,size*c,size*(WORLD.length-l-1),size,size);
                     }
                     else if (l>0 && WORLD[l-1][c]!=EMPTY)
-                        ctx.drawImage(EMPTY.imgB,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(EMPTY.imgB,size*c,size*(WORLD.length-l-1),size,size);
                     else 
-                        ctx.drawImage(EMPTY.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                        ctx.drawImage(EMPTY.img,size*c,size*(WORLD.length-l-1),size,size);
                     
                     break;
                    
@@ -451,25 +461,25 @@ function draw(){
                     if (obs == ROAD || obs == ROAD1)
                         switch (c){
                             case 2:
-                                ctx.drawImage(obs.imgG,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                                ctx.drawImage(obs.imgG,size*c,size*(WORLD.length-l-1),size,size);
                                 break;
                             case 3:
-                                ctx.drawImage(obs.imgM,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                                ctx.drawImage(obs.imgM,size*c,size*(WORLD.length-l-1),size,size);
                                 break;
                             case 4:
-                                ctx.drawImage(obs.imgD,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                                ctx.drawImage(obs.imgD,size*c,size*(WORLD.length-l-1),size,size);
                                 break;
                             default:
-                                ctx.drawImage(obs.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                                ctx.drawImage(obs.imgS,size*c,size*(WORLD.length-l-1),size,size);
                         }
                     else
                         dessinerLepiege(c,l,obs);
-                    ctx.drawImage(PLAYER.img,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);
+                    ctx.drawImage(PLAYER.img,size*c,size*(WORLD.length-l-1),size,size);
                     if (c==2 && l-1>=0 && quelleObstacleAlaLigne(l-1)==ARBRE)
-                        ctx.drawImage(ARBRE.imgS,SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE)
+                        ctx.drawImage(ARBRE.imgS,size*c,size*(WORLD.length-l-1),size,size)
                     break;
                 default:
-                    ctx.fillRect(SIZE*c,SIZE*(WORLD.length-l-1),SIZE,SIZE);                
+                    ctx.fillRect(size*c,size*(WORLD.length-l-1),size,size);                
             }
         }
     } 
@@ -709,26 +719,37 @@ function glisser(){
     }
 }
 
+let sourceImageGameOver;
 function colision(){
     switch(WORLD[player .posY][player .posX]){
         case FEU : 
             if (player .saut >0 || player .glisse>0){
                 return false;
             }else
+            sourceImageGameOver = gameOverImage.imgFeu;
             return true
-        case BRANCHE :
+        case BRANCHE :  
+            if ((player .saut >0)){
+                    
+                return false;
+            }else{
+                sourceImageGameOver = gameOverImage.imgBranche;
+                return true;}
         case TROU :
             if ((player .saut >0)){
                 return false;
-            }else
-                return true;
+            }else{
+                sourceImageGameOver = gameOverImage.imgTrou;
+                return true;}
         case ARBRE :
             if ((player .glisse >0)){
                 return false;
-            }else
-                return true
-            
+            }else{
+                sourceImageGameOver = gameOverImage.imgArbre;
+                return true;
+                }
         case EMPTY:
+            sourceImageGameOver = gameOverImage.imgChute;
             return true;
         default:
             return false;
@@ -741,6 +762,10 @@ function gameOver(){
     console.log("Score : "+score);
     run = false;
     clearInterval(jeuID);
+    let image = (document.querySelector("#gameOver img"));
+    image.src = sourceImageGameOver;
+    image.style.height = size*4  + 'px';
+    image.style.width =size*6 + 'px';
     screenGameOver.style.display = 'block';
     (document.querySelector("#gameOver p")).textContent = "Score : "+score;
 }

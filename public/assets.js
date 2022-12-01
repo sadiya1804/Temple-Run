@@ -142,13 +142,24 @@ const ARBRE ={
 };
 
 /**
- * Objet contenant les images ou sont écrit les aides utilisé pendant le tutoriel
+ * Objet contenant les chemin vers les images ou sont écrit les aides utilisé pendant le tutoriel
  */
 const TutorielImages = {
     imgTournerG:"images/TournerG.gif",
     imgTournerD:"images/tournerD.gif",
     imgSauter:"images/Sauter.gif",
     imgGlisser:"images/glisser.gif"
+};
+
+/**
+ * Objet contenant les chemin vers les images pour les differents gameOver
+ */
+ const gameOverImage = {
+    imgFeu:"images/gameOverFeu.png",
+    imgTrou:"images/gameOverTrou.png",
+    imgArbre:"images/gameOverArbre.png",
+    imgBranche:"images/gameOverBranche.png",
+    imgChute:"images/gameOverChute.png"
 };
 
 /** 
