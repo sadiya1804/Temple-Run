@@ -55,36 +55,22 @@ let difficulté = {
     boucle:0 // correspond au nombre d'itération effectué
 }
 
-/**
- * La fonction jeu est appeler dans un intervalle elle permet d'augmenter le score et
- * mettre à jour la difficulter c'est cette fonction qui vas ajouter
- */
-function Jeu(){
-    if (run){
-            difficulté.boucle++;
-            if (difficulté.boucle%difficulté.saut == 0){
-                score++;
-                difficulté.tour--;
-                AjoutLigne();
-                
-                if (difficulté.tour==0){
-                    difficulté.saut--;
-                    difficulté.tour=10 * (20- difficulté.saut)
-                }
-            }
-        
-    }
-}
 
+/**
+ * Objet contenant toute les informations relative au joueur
+ */
 let player  = {
-    posX: 3,
-    posY: 1,
-    saut:0,
-    glisse:0,
-    direction:0
+    posX: 3, // position x dans le tableau
+    posY: 1, // position y dans le tableau
+    saut:0,  // entier qui et incrémenter quand le joueur saute (0 = default)
+    glisse:0, // entier qui et incrémenter quand le joueur glisse (0 = default)
+    direction:0 // variable utiliser pour les moments ou on press une des flèches (droite et gauche)
 };
+
+// le score augmente tout au long de la partie et est afficher en fin de jeu
 let score = 0;
 
+// Tableau contenant tout les cases qu'on affiche dans le canvas
 let WORLD = [
     [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
     [EMPTY, EMPTY, ROAD, PLAYER, ROAD, EMPTY, EMPTY],
@@ -98,26 +84,28 @@ let WORLD = [
     [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY]
   ];
 
-canvas.height = WORLD.length*size;
-canvas.width = WORLD[0].length*size;
+//// ######### Mise en place évenement pour les mouvements dans le jeu ##########
 
+/**
+ * Ajout des évenements clavier
+ */
 document.addEventListener('keydown', function(evt){
     if (run){
         evt.preventDefault();
-        if (evt.key == 'ArrowLeft'){
-            player .direction = +2;
-            actionGauche();
+        if (evt.key == 'ArrowLeft'){ // Quand la touche gauche est enfoncé
+            player .direction = +2; 
+            actionGauche(); 
             basculerAgauche();
         }
-        if (evt.key == 'ArrowRight'){
+        if (evt.key == 'ArrowRight'){ //  Quand la touche droite est enfoncé
             player .direction = -2;
             actionDroite();
             basculerAdroite();
         }
-        if (evt.key == 'ArrowUp' || evt.key == ' '){
+        if (evt.key == 'ArrowUp' || evt.key == ' '){ // Quand la touche flèche vers le haut est enfoncé
             sauter();
         }
-        if (evt.key == 'ArrowDown'){
+        if (evt.key == 'ArrowDown'){ // Quand la touche flèche vers le bas est enfoncé
             glisser();
         }
         draw();
@@ -126,64 +114,16 @@ document.addEventListener('keydown', function(evt){
     //console.log(evt.key );
 });
 
-
-
-
-//partie tutoriel
-var tutoriel = -1;
-var chemin = [ 
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    cheminAGauche(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    cheminADroite(ROAD1),  
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(BRANCHE),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ARBRE),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(FEU),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(ROAD1),
-    creerLigne2(ROAD),
-    creerLigne2(TROU),
-
-];
-function creerLigne2(obstacle){
-    return [EMPTY,EMPTY,obstacle,obstacle,obstacle, EMPTY, EMPTY];
-}
-
- 
-
-
-/**{ DeBut Tactil event test*/
+/**
+ * Ajout des évenements Tactils
+*/
 console.log("Tactil actif");
 canvas.addEventListener('touchstart', handleStart);
 canvas.addEventListener('touchend', handleEnd);
 canvas.addEventListener('touchcancel', handleCancel);
 canvas.addEventListener('touchmove', handleMoove);
 
-let ongoingTouche = null;
+let ongoingTouche = null; // correspond a un elmt Touch (on en garde que un parce qu'il n'y a pas besoin de plusieur doigt pour jouer a ceux jeu)
 
 function handleStart(evt) {
     evt.preventDefault();
@@ -282,6 +222,9 @@ function handleCancel(evt){
   }
 }
 
+/**
+ * vérifie que l'id de la touch passé en parametre correspond a la précedente Touch (c'est toujours le même doigt qui touche l'écran)
+ */
 function ongoingTouchIndexById(idToFind) {
   if (ongoingTouche.identifier == idToFind) {
     return ongoingTouche.identifier;
@@ -289,10 +232,92 @@ function ongoingTouchIndexById(idToFind) {
   return -1;  
 }
 
-function copyTouch({ identifier, pageX, pageY }) {
+/** Duplique un élement Touch */
+function copyTouch({ identifier, pageX, pageY }) { 
   return { identifier, pageX, pageY };
 }
 /**}*/
+
+
+//partie tutoriel
+
+var tutoriel = -1; // suivant la valeur on sait si le tutoriel est actif ou pas
+// parcours du tutoriel ( au lieu de générer aléatoirement la route pour le tutoriel on utilise la liste suivante pour les premières lignes)
+var chemin = [ 
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    cheminAGauche(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    cheminADroite(ROAD1),  
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(BRANCHE),
+    générerLigne(ROAD1),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ARBRE),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(FEU),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(ROAD1),
+    générerLigne(ROAD),
+    générerLigne(TROU),
+
+];
+
+/**
+ * Cet fonction créai une ligne correspondant à l'obstacle en paramètre
+ * 
+ * @param {*} obstacle type object correspondant a ce qu'il y a sur la ligne (arbre, trou, route,...)
+ * @returns tableau de valeur corrrespondant a une ligne pour aller dans le tableau World
+ */
+function générerLigne(obstacle){
+    return [EMPTY,EMPTY,obstacle,obstacle,obstacle, EMPTY, EMPTY];
+}
+
+ 
+
+
+
+
+
+/**
+ * La fonction jeu est appeler dans un intervalle elle permet d'augmenter le score et
+ * mettre à jour la difficulter c'est cette fonction qui vas appeler la fonction qui ajoute une Ligne
+ */
+ function Jeu(){
+    if (run){
+            difficulté.boucle++;
+            if (difficulté.boucle%difficulté.saut == 0){
+                score++;
+                difficulté.tour--;
+                AjoutLigne();
+                
+                if (difficulté.tour==0){
+                    difficulté.saut--;
+                    difficulté.tour=10 * (20- difficulté.saut)
+                }
+            }
+        
+    }
+}
 
 (document.querySelector("#gameOver button")).addEventListener('click',lancerJeu);
 (document.querySelector("#rêgleJeu button")).addEventListener('click',lancerJeu);

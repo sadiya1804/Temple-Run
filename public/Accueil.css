@@ -27,7 +27,7 @@ body{
     width: 100vw;
     height: 100vh;
     padding: 35vh 30vw;
-    z-index: 1;
+    z-index: 4;
 }
 
 #choixTuto > div{
