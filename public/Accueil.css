@@ -20,6 +20,16 @@ body{
     background-size: auto;
 }
 
+#choixTuto{
+    position: fixed;
+    border: solid yellow 3px;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255,0.7);
+    
+}
+
 
 #Accueil{
     font-size: 30px;

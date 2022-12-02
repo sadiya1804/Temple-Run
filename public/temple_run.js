@@ -94,7 +94,7 @@ document.addEventListener('keydown', function(evt){
 
 
 //partie tutoriel
-var tutoriel = confirm("Voulez-vous suivre le turoriel ?");
+var tutoriel = -1;
 var chemin = [ 
     creerLigne2(ROAD1),
     creerLigne2(ROAD),
@@ -272,6 +272,8 @@ function copyTouch({ identifier, pageX, pageY }) {
 bt.addEventListener('click',lancerJeu);
 
 function lancerJeu(){
+    if (tutoriel==-1)
+        tutoriel = confirm("Voulez-vous suivre le turoriel ?");
     screenGameOver.style.display = "none";
     (document.querySelector("#rêgleJeu")).style.display = "none";
     (document.querySelector("#titre")).style.display = "none";
