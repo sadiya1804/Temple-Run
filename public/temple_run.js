@@ -17,8 +17,8 @@ let canvas = document.getElementById('zoneJeu');
 let run = false;
 
 function calculeTailleCaseCanvas(){
-    h = window.innerHeight -10;
-    w= window.innerWidth-10;
+    h = window.innerHeight;
+    w= window.innerWidth;
     h=Math.floor(h/10);
     w=Math.floor(w/7);
 
@@ -271,10 +271,25 @@ function copyTouch({ identifier, pageX, pageY }) {
 });
 bt.addEventListener('click',lancerJeu);
 
+const fenetreTuto = document.getElementById("choixTuto");
+fenetreTuto.addEventListener('click',function(evt){
+    switch(evt.target.tagName){
+        case "BUTTON":
+            if(evt.target.textContent == " Oui "){
+                tutoriel = true;}
+            else{
+                tutoriel = false;}
+            lancerJeu();
+            break;
+    }
+})
+
 function lancerJeu(){
-    if (tutoriel==-1)
-        tutoriel = confirm("Voulez-vous suivre le turoriel ?");
+    if (tutoriel==-1){
+        console.log("choixTutoriel");
+        return fenetreTuto.style.display = "block";}
     screenGameOver.style.display = "none";
+    fenetreTuto.style.display = "none";
     (document.querySelector("#rêgleJeu")).style.display = "none";
     (document.querySelector("#titre")).style.display = "none";
     size = calculeTailleCaseCanvas();

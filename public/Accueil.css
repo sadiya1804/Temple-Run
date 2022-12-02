@@ -21,13 +21,22 @@ body{
 }
 
 #choixTuto{
+    display: none;
     position: fixed;
+    width: 100vw;
+    height: 100vh;
+    padding: 40vh 20vw;
+    z-index: 1;
+}
+
+#choixTuto > div{
+    height: 20vh;
+    width: 60vw;
     border: solid yellow 3px;
     border-radius: 20px;
     padding: 20px;
     text-align: center;
     background-color: rgba(255, 255, 255,0.7);
-    
 }
 
 
@@ -169,8 +178,7 @@ img{
 
 }
 canvas {
-	display: none;
-	border: 1px solid black; 
+	display: none; 
 	z-index: 3;
   }
 
