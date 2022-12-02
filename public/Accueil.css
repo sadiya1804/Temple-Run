@@ -26,14 +26,12 @@ body{
     position: fixed;
     width: 100vw;
     height: 100vh;
-    padding: 40vh 20vw;
+    padding: 35vh 30vw;
     z-index: 1;
 }
 
 #choixTuto > div{
     display: grid;
-    height: 30vh;
-    width: 50vw;
     border: solid yellow 3px;
     border-radius: 20px;
     padding: 20px;
@@ -193,7 +191,9 @@ img{
         line-height:50px;
 
     }
-    
+    #choixTuto{
+        padding: 20vh 10vw;
+    }
 
 
 }

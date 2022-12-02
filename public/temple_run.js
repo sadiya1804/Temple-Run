@@ -1,21 +1,34 @@
 
 // On définit la taille de la des cases du Cannevas en fonction de la taille de la fenêtre
 let size = calculeTailleCaseCanvas();
+
 // On récupère le bouton qui permet de lancer le jeu
 const bt = document.getElementById('button1');
 
+// Image ou l'on mets le gif d'instruction pour le tutoriel
 const imageTuto = document.getElementById('aideTuto');
 
+// Ecran qu'on affiche lors de la mort du personnage
 const screenGameOver = document.getElementById('gameOver');
+
 // variable servant à stocker l'identifiant générer lors de la création de l'intervale pour le jeu
 let jeuID;
 
 // récupération du canva
 let canvas = document.getElementById('zoneJeu');
-
+// mise en place de l'environnement 2D
+let ctx = canvas.getContext('2d');
 // initialisation de la variable run, run représente quand le jeu tourne 
 let run = false;
 
+/**
+ * Cette fonction calcule la taille des cases, pour que le jeu fasse la taille maximum
+ * récupére la hauteur et la largeur de la page et divise par les dimensions du tableau
+ * on retourne la taille la plus basse, Comme ça le jeu s'affiche soit sur toute la hauteur 
+ * soit sur toute la largeur.
+ * 
+ * @returns la valeur a utiliser comme nouvelle taille des case
+ */
 function calculeTailleCaseCanvas(){
     h = window.innerHeight;
     w= window.innerWidth;
@@ -25,20 +38,43 @@ function calculeTailleCaseCanvas(){
     return Math.min(h,w);
 }
 
-let ctx = canvas.getContext('2d');
+// Variable qui correspond au nombre de tour avant qu'il y ai un nouveau piege
 let prochainPiege=0;
+
+// Contient le prochain type de route entre (ROAD et ROAD1)
 let nextRoad = ROAD;
 
+// quand cette variable vos 1 ça signifie que les route a créer doivent être vide
 let stopRoute = -1;
+
+
+// Objet qui contient tout les élements relatifs à la difficulté du jeu
 let difficulté = {
-    saut: 20,
-    tour:5,
-    boucle:0
+    saut: 20, // correspond au nombre d'itération sauter avant de faire défiler les lignes (plus cette variable est basse plus le jeu va vite)
+    tour:10, // correspond au nombre de tour avant que la difficulter augmente (-> saut diminu)
+    boucle:0 // correspond au nombre d'itération effectué
 }
 
-
-ctx.strokeStyle = "red";
-ctx.fillStyle = "#00FF00";
+/**
+ * La fonction jeu est appeler dans un intervalle elle permet d'augmenter le score et
+ * mettre à jour la difficulter c'est cette fonction qui vas ajouter
+ */
+function Jeu(){
+    if (run){
+            difficulté.boucle++;
+            if (difficulté.boucle%difficulté.saut == 0){
+                score++;
+                difficulté.tour--;
+                AjoutLigne();
+                
+                if (difficulté.tour==0){
+                    difficulté.saut--;
+                    difficulté.tour=10 * (20- difficulté.saut)
+                }
+            }
+        
+    }
+}
 
 let player  = {
     posX: 3,
@@ -908,22 +944,7 @@ function AjoutLigne(){
     }
 }
 
-function Jeu(){
-    if (run){
-            difficulté.boucle++;
-            if (difficulté.boucle%difficulté.saut == 0){
-                score++;
-                difficulté.tour--;
-                AjoutLigne();
-                
-                if (difficulté.tour==0){
-                    difficulté.saut--;
-                    difficulté.tour=10 * (20- difficulté.saut)
-                }
-            }
-        
-    }
-}
+
 
 
 
