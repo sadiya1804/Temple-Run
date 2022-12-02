@@ -10,6 +10,8 @@ const imageTuto = document.getElementById('aideTuto');
 
 // Ecran qu'on affiche lors de la mort du personnage
 const screenGameOver = document.getElementById('gameOver');
+// Section contenant les bouttons pour choisir si on veut ou pas faire le tuto
+const fenetreTuto = document.getElementById("choixTuto");
 
 // variable servant à stocker l'identifiant générer lors de la création de l'intervale pour le jeu
 let jeuID;
@@ -69,6 +71,8 @@ let player  = {
 
 // le score augmente tout au long de la partie et est afficher en fin de jeu
 let score = 0;
+// contient l'url de l'image a afficher lors du game over (change en fonction de comment on meurt)
+let sourceImageGameOver;
 
 // Tableau contenant tout les cases qu'on affiche dans le canvas
 let WORLD = [
@@ -171,6 +175,12 @@ function handleEnd(evt) {
   }
 }
 
+/**
+ * Quand un evement touchMove est enclenché on appele cette méthode
+ * En comparant les coordonnées des Touchs on détermine si l'utilisateur a glisser vers me haut, le bas, la droite, la gauche
+ * et on appelle la fonction qui correspond
+ * @param {*} evt 
+ */
 function handleMoove(evt) {
     evt.preventDefault();
   
@@ -236,10 +246,10 @@ function ongoingTouchIndexById(idToFind) {
 function copyTouch({ identifier, pageX, pageY }) { 
   return { identifier, pageX, pageY };
 }
-/**}*/
 
 
-//partie tutoriel
+
+// ##### partie tutoriel ######
 
 var tutoriel = -1; // suivant la valeur on sait si le tutoriel est actif ou pas
 // parcours du tutoriel ( au lieu de générer aléatoirement la route pour le tutoriel on utilise la liste suivante pour les premières lignes)
@@ -294,12 +304,8 @@ function générerLigne(obstacle){
 
  
 
-
-
-
-
 /**
- * La fonction jeu est appeler dans un intervalle elle permet d'augmenter le score et
+ * La fonction jeu est appeler dans un interval elle permet d'augmenter le score et
  * mettre à jour la difficulter c'est cette fonction qui vas appeler la fonction qui ajoute une Ligne
  */
  function Jeu(){
@@ -319,9 +325,12 @@ function générerLigne(obstacle){
     }
 }
 
+// Ajout à tout les boutons Jouer l'évement permettant de lancer le jeu
 (document.querySelector("#gameOver button")).addEventListener('click',lancerJeu);
 (document.querySelector("#rêgleJeu button")).addEventListener('click',lancerJeu);
+bt.addEventListener('click',lancerJeu);
 
+// Ajout au bouton voir Rêgle un évenement 'click' pour afficher la section avec les rêgles
 (document.getElementById("button2")).addEventListener('click',function(){
     (document.querySelector("#titre")).style.display = "none";
     screenGameOver.style.display = "none";
@@ -330,9 +339,22 @@ function générerLigne(obstacle){
     (document.querySelector("#rêgleJeu")).style.display = "block";
 
 });
-bt.addEventListener('click',lancerJeu);
 
-const fenetreTuto = document.getElementById("choixTuto");
+// Ajout au bouton retour un évenement 'click' pour ré-afficher l'écran tittre
+(document.querySelector("#retour")).addEventListener('click',function(){
+    (document.querySelector("#rêgleJeu")).style.display = "none";
+    screenGameOver.style.display = "none";
+    canvas.style.display="none";
+    imageTuto.style.display = "none";
+    (document.querySelector("#titre")).style.display = "block";
+});
+
+/**
+ * Ajout d'un listener sur la fenetre pour le choix du tuto pour capter quand l'utilisateur fait
+ * son choix entre faire ou ne pas faire le tutoriel
+ * 
+ * suite au choix le jeu est lancer grace à la fonction lancerJeu()
+ */
 fenetreTuto.addEventListener('click',function(evt){
     switch(evt.target.tagName){
         case "BUTTON":
@@ -345,6 +367,11 @@ fenetreTuto.addEventListener('click',function(evt){
     }
 })
 
+/**
+ * Si on a pas fait le choix pour le tutoriel on affiche la fenetre permettant de faire le choix 
+ * 
+ * Sinon on affiche le canvas et on initialise le jeu et on désaffiche les autres sections
+ */
 function lancerJeu(){
     if (tutoriel==-1){
         console.log("choixTutoriel");
@@ -385,15 +412,11 @@ function lancerJeu(){
 
 };
 
-(document.querySelector("#retour")).addEventListener('click',function(){
-    (document.querySelector("#rêgleJeu")).style.display = "none";
-    screenGameOver.style.display = "none";
-    canvas.style.display="none";
-    imageTuto.style.display = "none";
-    (document.querySelector("#titre")).style.display = "block";
-});
-
-
+/**
+ * Retourne l'éléments à la ligne posY du tableau WORLD
+ * @param posY 
+ * @returns ceux que contient l'une des cases de la ligne posY du tableau
+ */
 function quelleObstacleAlaLigne(posY){    
     switch(player .posX){
         case 2:
@@ -411,32 +434,9 @@ function quelleObstacleAlaLigne(posY){
     return WORLD[posY][posX];
 }
 
-function dessinerLepiege(c,l,cell){
-    if (c<2 || c>4)
-        return ctx.drawImage(ROAD.imgS,size*c,size*(WORLD.length-l-1),size,size);
-    if (l+2<WORLD.length)
-        route = quelleObstacleAlaLigne(l+2);
-    else 
-        route = quelleObstacleAlaLigne(l-2);
-    if (c == 2)
-        ctx.drawImage(route.imgG,size*c,size*(WORLD.length-l-1),size,size);
-    else if (c == 3)
-        ctx.drawImage(route.imgM,size*c,size*(WORLD.length-l-1),size,size);
-    else 
-        ctx.drawImage(route.imgD,size*c,size*(WORLD.length-l-1),size,size);
-    if (player .posY == l && player .posX == c && player .glisse>0 && (cell==ARBRE || cell==FEU)){
-        ctx.drawImage(PLAYER.img,size*c,size*(WORLD.length-l-1),size,size);
-    }
-    if (c == 2)
-        ctx.drawImage(cell.imgG,size*c,size*(WORLD.length-l-1),size,size);
-    else if (c == 3)
-        ctx.drawImage(cell.imgM,size*c,size*(WORLD.length-l-1),size,size);
-    else 
-        ctx.drawImage(cell.imgD,size*c,size*(WORLD.length-l-1),size,size);
-    
-}
-
-
+/**
+ * Cette fonction permet de dessiner dans le canvas tout le jeu
+ */
 function draw(){
     let l = 0;
     let c =0;
@@ -562,6 +562,40 @@ function draw(){
     
 }
 
+/**
+ * Cette fonction affiche un certain type de cellule (ARBRE,TROU,BRANCHE,FEU)
+ * @param c index de la colonne 
+ * @param l index de la ligne
+ * @param cell ceux qu'on veut dessiner
+ */
+function dessinerLepiege(c,l,cell){
+    if (c<2 || c>4)
+        return ctx.drawImage(ROAD.imgS,size*c,size*(WORLD.length-l-1),size,size);
+    if (l+2<WORLD.length)
+        route = quelleObstacleAlaLigne(l+2);
+    else 
+        route = quelleObstacleAlaLigne(l-2);
+    if (c == 2)
+        ctx.drawImage(route.imgG,size*c,size*(WORLD.length-l-1),size,size);
+    else if (c == 3)
+        ctx.drawImage(route.imgM,size*c,size*(WORLD.length-l-1),size,size);
+    else 
+        ctx.drawImage(route.imgD,size*c,size*(WORLD.length-l-1),size,size);
+    if (player .posY == l && player .posX == c && player .glisse>0 && (cell==ARBRE || cell==FEU)){
+        ctx.drawImage(PLAYER.img,size*c,size*(WORLD.length-l-1),size,size);
+    }
+    if (c == 2)
+        ctx.drawImage(cell.imgG,size*c,size*(WORLD.length-l-1),size,size);
+    else if (c == 3)
+        ctx.drawImage(cell.imgM,size*c,size*(WORLD.length-l-1),size,size);
+    else 
+        ctx.drawImage(cell.imgD,size*c,size*(WORLD.length-l-1),size,size);
+    
+}
+
+/**
+ * Affiche le gif d'instruction pour le tutoriel
+ */
 function afficheAideTuto(){
     let posY =1;
     obstacle = quelleObstacleAlaLigne(posY);
@@ -611,6 +645,9 @@ function afficheAideTuto(){
 
 }
 
+/**
+ * test si on peut aller a droite et si c'est le cas apelle la fonction faisant aller à droite
+ */
 function actionDroite(){
     console.log("Droite");
         if ((WORLD[player .posY][5] == ROAD || WORLD[player .posY][5] == ROAD1)&&run){  
@@ -622,8 +659,203 @@ function actionDroite(){
     
 }
 
-    
-function changeEnvironnement(){
+/**
+ * Fait aller le personnage à droite si le joueur arrive en bord du canvas
+ * on appelle la fonction changeEnvironnement
+ */
+function allerAdroite(){
+    if (player .posX == 6){
+        changeEnvironnement();
+        PLAYER.img = imagePlayer.img1;
+        draw();
+        run =true;
+    }
+    else{
+        WORLD[player .posY][player .posX] = WORLD[player .posY][player .posX+1];
+        player .posX+=1;
+        WORLD[player .posY][player .posX] = PLAYER;
+        if (PLAYER.img == imagePlayer.imgD1)
+            PLAYER.img = imagePlayer.imgD2;
+        else
+            PLAYER.img = imagePlayer.imgD1;
+        draw();
+        pause = 30 * difficulté.saut;
+        setTimeout(allerAdroite,pause);
+    }
+}
+
+/**
+ * permet de changer de voie du joueur vers la droite
+ */
+function basculerAdroite(){
+    if (player .posX<4 && ( WORLD[player .posY][player .posX+1] == ROAD || WORLD[player .posY][player .posX+1] == ROAD1) && run){
+        WORLD[player .posY][player .posX]=WORLD[player .posY][player .posX+1];
+        player .posX+=1;
+        WORLD[player .posY][player .posX]=PLAYER;
+        draw();
+    }
+}
+
+/**
+ * permet de changer de voie du joueur vers la gauche
+ */
+function basculerAgauche(){
+    if (player .posX>2 && (WORLD[player .posY][player .posX-1] == ROAD || WORLD[player .posY][player .posX-1] == ROAD1) && run){
+        WORLD[player .posY][player .posX]=WORLD[player .posY][player .posX-1];
+        player .posX-=1;
+        WORLD[player .posY][player .posX]=PLAYER;
+        draw();
+    }
+}
+
+/**
+ * Fait aller le personnage à gauche si le joueur arrive en bord du canvas
+ * on appelle la fonction changeEnvironnement
+ */
+function actionGauche(){
+    console.log("Gauche");
+        if ((WORLD[player .posY][1] == ROAD || WORLD[player .posY][1] == ROAD1)&&run){
+            run=false;
+            pause = 30 * difficulté.saut;
+            setTimeout(allerAgauche,pause,0)
+        }
+}
+
+/**
+ * test si on peut aller a gauche et si c'est le cas apelle la fonction faisant aller à droite
+ */
+function allerAgauche(){
+    if (player .posX == 0){
+        changeEnvironnement();
+        PLAYER.img = imagePlayer.img1;
+        draw();
+        run =true;
+    }
+    else{
+        WORLD[player .posY][player .posX] = WORLD[player .posY][player .posX-1];
+        player .posX-=1;
+        WORLD[player .posY][player .posX] = PLAYER;
+        
+        if (PLAYER.img == imagePlayer.imgG1)
+            PLAYER.img = imagePlayer.imgG2;
+        else
+            PLAYER.img = imagePlayer.imgG1;
+        draw();
+        pause = 30 * difficulté.saut;
+        setTimeout(allerAgauche,pause);
+    }
+}
+
+/**
+ * réinitialise toute les variables du jeu a 0
+ */
+function initJeu(){
+    score = 0;
+    WORLD = [
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, PLAYER, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
+        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY]
+      ];
+    draw();
+    prochainPiege=0;
+    stopRoute = -1;
+    nextRoad = ROAD;
+    difficulté = {
+        saut: 20,
+        tour:5,
+        boucle:0
+    }
+    player  = {
+        posX: 3,
+        posY: 1,
+        saut:0,
+        glisse:0,
+        direction:0
+    };
+
+
+}
+
+/**
+ * Fait sauter le joueur si il le peut
+ */
+function sauter(){
+    console.log("Saut");
+    if (player .saut<-1){
+        player .glisse=-1;
+        player .saut=2;
+        PLAYER.img = imagePlayer.imgUp;
+    }
+
+}
+
+/**
+ * Fait glisser le joueur si il le peut
+ */
+function glisser(){
+    console.log("Glisse");
+    if (player .glisse<-1){
+        player .saut=-1;
+        player .glisse=2;
+        PLAYER.img = imagePlayer.imgDown;
+    }
+}
+
+/**
+ * vérifie si le joueur est entré dans un obstacle ou si il est tombé dans le vide
+ * Dans le cas ou le joueur s'est pris un obstacle, on change la variable sourceImageGameOver
+ * avec l'url de l'image correspondant à l'obstacle.
+ * @returns false s'il n'y a pas de colision true sinon
+ */
+function colision(){
+    switch(WORLD[player .posY][player .posX]){
+        case FEU : 
+            if (player .saut >0 || player .glisse>0){
+                return false;
+            }else
+            sourceImageGameOver = gameOverImage.imgFeu;
+            return true
+        case BRANCHE :  
+            if ((player .saut >0)){
+                    
+                return false;
+            }else{
+                sourceImageGameOver = gameOverImage.imgBranche;
+                return true;}
+        case TROU :
+            if ((player .saut >0)){
+                return false;
+            }else{
+                sourceImageGameOver = gameOverImage.imgTrou;
+                return true;}
+        case ARBRE :
+            if ((player .glisse >0)){
+                return false;
+            }else{
+                sourceImageGameOver = gameOverImage.imgArbre;
+                return true;
+                }
+        case EMPTY:
+            sourceImageGameOver = gameOverImage.imgChute;
+            return true;
+        default:
+            return false;
+    }
+         
+}
+
+/**
+ * Appeler lorsqu'on tourne à droite ou à gauche, refait une route droite
+ * et parfois change la couleur de l'eau (vert ou bleu)
+ */
+ function changeEnvironnement(){
     player .direction = 0;
     player .posX = 3;
     stopRoute = -1;
@@ -668,167 +900,9 @@ function changeEnvironnement(){
     creerLigne()];
 }
 
-function allerAdroite(){
-    if (player .posX == 6){
-        changeEnvironnement();
-        PLAYER.img = imagePlayer.img1;
-        draw();
-        run =true;
-    }
-    else{
-        WORLD[player .posY][player .posX] = WORLD[player .posY][player .posX+1];
-        player .posX+=1;
-        WORLD[player .posY][player .posX] = PLAYER;
-        if (PLAYER.img == imagePlayer.imgD1)
-            PLAYER.img = imagePlayer.imgD2;
-        else
-            PLAYER.img = imagePlayer.imgD1;
-        draw();
-        pause = 30 * difficulté.saut;
-        setTimeout(allerAdroite,pause);
-    }
-}
-
-
-function basculerAdroite(){
-    if (player .posX<4 && ( WORLD[player .posY][player .posX+1] == ROAD || WORLD[player .posY][player .posX+1] == ROAD1) && run){
-        WORLD[player .posY][player .posX]=WORLD[player .posY][player .posX+1];
-        player .posX+=1;
-        WORLD[player .posY][player .posX]=PLAYER;
-        draw();
-    }
-}
-
-function basculerAgauche(){
-    if (player .posX>2 && (WORLD[player .posY][player .posX-1] == ROAD || WORLD[player .posY][player .posX-1] == ROAD1) && run){
-        WORLD[player .posY][player .posX]=WORLD[player .posY][player .posX-1];
-        player .posX-=1;
-        WORLD[player .posY][player .posX]=PLAYER;
-        draw();
-    }
-}
-
-function actionGauche(){
-    console.log("Gauche");
-        if ((WORLD[player .posY][1] == ROAD || WORLD[player .posY][1] == ROAD1)&&run){
-            run=false;
-            pause = 30 * difficulté.saut;
-            setTimeout(allerAgauche,pause,0)
-        }
-}
-function allerAgauche(){
-    if (player .posX == 0){
-        changeEnvironnement();
-        PLAYER.img = imagePlayer.img1;
-        draw();
-        run =true;
-    }
-    else{
-        WORLD[player .posY][player .posX] = WORLD[player .posY][player .posX-1];
-        player .posX-=1;
-        WORLD[player .posY][player .posX] = PLAYER;
-        
-        if (PLAYER.img == imagePlayer.imgG1)
-            PLAYER.img = imagePlayer.imgG2;
-        else
-            PLAYER.img = imagePlayer.imgG1;
-        draw();
-        pause = 30 * difficulté.saut;
-        setTimeout(allerAgauche,pause);
-    }
-}
-
-function initJeu(){
-    score = 0;
-    WORLD = [
-        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD, PLAYER, ROAD, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD1, ROAD1, ROAD1, EMPTY, EMPTY],
-        [EMPTY, EMPTY, ROAD, ROAD, ROAD, EMPTY, EMPTY]
-      ];
-    draw();
-    prochainPiege=0;
-    stopRoute = -1;
-    nextRoad = ROAD;
-    difficulté = {
-        saut: 20,
-        tour:5,
-        boucle:0
-    }
-    player  = {
-        posX: 3,
-        posY: 1,
-        saut:0,
-        glisse:0,
-        direction:0
-    };
-
-
-}
-
-function sauter(){
-    console.log("Saut");
-    if (player .saut<-1){
-        player .glisse=-1;
-        player .saut=2;
-        PLAYER.img = imagePlayer.imgUp;
-    }
-
-}
-
-function glisser(){
-    console.log("Glisse");
-    if (player .glisse<-1){
-        player .saut=-1;
-        player .glisse=2;
-        PLAYER.img = imagePlayer.imgDown;
-    }
-}
-
-let sourceImageGameOver;
-function colision(){
-    switch(WORLD[player .posY][player .posX]){
-        case FEU : 
-            if (player .saut >0 || player .glisse>0){
-                return false;
-            }else
-            sourceImageGameOver = gameOverImage.imgFeu;
-            return true
-        case BRANCHE :  
-            if ((player .saut >0)){
-                    
-                return false;
-            }else{
-                sourceImageGameOver = gameOverImage.imgBranche;
-                return true;}
-        case TROU :
-            if ((player .saut >0)){
-                return false;
-            }else{
-                sourceImageGameOver = gameOverImage.imgTrou;
-                return true;}
-        case ARBRE :
-            if ((player .glisse >0)){
-                return false;
-            }else{
-                sourceImageGameOver = gameOverImage.imgArbre;
-                return true;
-                }
-        case EMPTY:
-            sourceImageGameOver = gameOverImage.imgChute;
-            return true;
-        default:
-            return false;
-    }
-         
-}
-
+/**
+ *  Fonction de fin de jeu, clear l'interval et affiche l'écran de gameOver 
+ */
 function gameOver(){
     console.log("Game Over");
     console.log("Score : "+score);
@@ -842,22 +916,45 @@ function gameOver(){
     (document.querySelector("#gameOver p")).textContent = "Score : "+score;
 }
 
+/**
+ * Génére une route spécial avec le chemin qui par vers la droite
+ * 
+ * @param r soit ROAD ou ROAD1
+ * @returns tableau pouvant être une ligne de WORLD
+ */
 function cheminADroite(r){
     return [EMPTY, EMPTY, r, r, r, r, r];
 }
 
+/**
+ * Génére une route spécial avec le chemin qui par vers la gauche
+ * 
+ * @param r soit ROAD ou ROAD1
+ * @returns tableau pouvant être une ligne de WORLD
+ */
 function cheminAGauche(r){
     
     return [r, r, r, r, r,EMPTY, EMPTY];
 }
 
+/**
+ * Génére une route spécial avec le chemin qui par vers la droite et la gauche
+ * 
+ * @param r soit ROAD ou ROAD1
+ * @returns tableau pouvant être une ligne de WORLD
+ */
 function cheminAGetD(r){
     
     return [r, r, r, r, r, r, r];
 }
 
 
-
+/**
+ * Génere une nouvelle ligne pour le tableau WORLD 
+ * aléatoirement avec un piege
+ * 
+ * @returns tableau pouvant être une ligne de WORLD
+ */
 function creerLigne(){
     if (nextRoad==ROAD1) r= ROAD;
     else r = ROAD1;
@@ -915,6 +1012,13 @@ function creerLigne(){
     return newLine;
 }
 
+/**
+ * cet fonction vas décalé toute les lignes du tableau WORLD, pop une ligne
+ * et en ajouter une nouvelle générer par la fonction 'créerLigne' ou en 
+ * se servant des ligne prédéfinit du tutoriel
+ * 
+ * c'est ce qui vas faire l'inpression que le joueur avance
+ */
 function AjoutLigne(){
     if(tutoriel==true && stopRoute !=0){
         newLine = chemin.pop();
