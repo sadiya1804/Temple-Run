@@ -21,6 +21,7 @@ body{
 }
 
 #choixTuto{
+    background-color:rgba(0, 0, 0, 0.481);
     display: none;
     position: fixed;
     width: 100vw;
@@ -30,13 +31,32 @@ body{
 }
 
 #choixTuto > div{
-    height: 20vh;
-    width: 60vw;
+    display: grid;
+    height: 30vh;
+    width: 50vw;
     border: solid yellow 3px;
     border-radius: 20px;
     padding: 20px;
     text-align: center;
     background-color: rgba(255, 255, 255,0.7);
+}
+
+#choixTuto > div button{
+    display: flex;
+    margin:5px;
+    margin-top: 13px;
+    font-family: 'Poppins';
+    color: black !important;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+    background: #d3b821;
+    padding: 20px;
+    border-radius: 50px;
+    display: inline-block;
+    border: none;
+    transition: all 0.4s ease 0s;
+
 }
 
 
